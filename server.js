@@ -12,8 +12,21 @@ const PORT = process.env.PORT || 3001;
 // ─────────────────────────────────────────────
 // MIDDLEWARE
 // ─────────────────────────────────────────────
+const ALLOWED_ORIGINS = [
+    'https://www.godbody.io',
+    'https://godbody.io',
+    'https://godbody-ai-production.up.railway.app',
+    'http://localhost:3000',
+    'http://localhost:3001',
+    process.env.FRONTEND_URL,
+].filter(Boolean);
+
 app.use(cors({
-    origin: process.env.FRONTEND_URL || 'http://localhost:3000',
+    origin: (origin, cb) => {
+        // allow server-to-server (no origin) or whitelisted
+        if (!origin || ALLOWED_ORIGINS.includes(origin)) return cb(null, true);
+        cb(new Error(`CORS blocked: ${origin}`));
+    },
     methods: ['GET', 'POST', 'PUT', 'DELETE'],
     allowedHeaders: ['Content-Type', 'Authorization', 'x-user-id', 'x-admin-key'],
 }));
@@ -64,6 +77,11 @@ const path = require('path');
 const { LOCAL_UPLOAD_DIR } = require('./server/services/storage');
 app.use('/uploads', require('express').static(LOCAL_UPLOAD_DIR));
 app.use('/client', require('express').static(path.join(__dirname, 'client')));
+
+// Root redirect → main app UI
+app.get('/', (_req, res) => res.redirect('/client/index.html'));
+app.get('/app', (_req, res) => res.redirect('/client/index.html'));
+
 
 // ─────────────────────────────────────────────
 // HEALTH CHECK
