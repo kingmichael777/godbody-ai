@@ -590,9 +590,23 @@
     .card-thumb-overlay {
       position: absolute;
       inset: 0;
-      background: rgba(0, 0, 0, 0.2);
+      background: linear-gradient(to bottom, rgba(0, 0, 0, 0.1) 0%, rgba(0, 0, 0, 0.45) 100%);
       opacity: 0;
       transition: opacity 0.2s;
+    }
+
+    .card-thumb-img {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      object-position: center top;
+      transition: transform 0.4s ease;
+    }
+
+    .tool-card:hover .card-thumb-img {
+      transform: scale(1.06);
     }
 
     .card-icon-wrap {
@@ -1036,14 +1050,8 @@
       <!-- Face Swap -->
       <div class="tool-card" data-category="video image" data-tool="face_swap" data-replicate
         style="animation-delay:0.04s" onclick="openModal('face_swap')">
-        <div class="card-thumb bg-gold">
-          <div class="card-icon-wrap icon-gold">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
-              <circle cx="12" cy="8" r="4" />
-              <path d="M6 20v-1a6 6 0 0112 0v1" />
-              <path d="M16 8l2-2m0 0l2 2m-2-2v4" />
-            </svg>
-          </div>
+        <div class="card-thumb">
+          <img class="card-thumb-img" src="img/tool-face-swap.png" alt="Face Swap">
           <div class="card-thumb-overlay"></div>
         </div>
         <div class="card-body">
@@ -1069,14 +1077,8 @@
       <!-- AI Headshots -->
       <div class="tool-card" data-category="image new" data-tool="ai_headshots" data-replicate
         style="animation-delay:0.08s" onclick="openModal('ai_headshots')">
-        <div class="card-thumb bg-purple">
-          <div class="card-icon-wrap icon-purple">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
-              <rect x="3" y="3" width="18" height="18" rx="4" />
-              <circle cx="12" cy="10" r="3" />
-              <path d="M6 20.5a6 6 0 0112 0" />
-            </svg>
-          </div>
+        <div class="card-thumb">
+          <img class="card-thumb-img" src="img/tool-ai-headshots.png" alt="AI Headshots">
           <div class="card-thumb-overlay"></div>
         </div>
         <div class="card-body">
@@ -1099,14 +1101,8 @@
       <!-- Text to Image -->
       <div class="tool-card" data-category="image" data-tool="text_to_image" data-replicate
         style="animation-delay:0.12s" onclick="openModal('text_to_image')">
-        <div class="card-thumb bg-blue">
-          <div class="card-icon-wrap icon-blue">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
-              <rect x="3" y="3" width="18" height="18" rx="2" />
-              <circle cx="8.5" cy="8.5" r="1.5" />
-              <path d="M21 15l-5-5L5 21" />
-            </svg>
-          </div>
+        <div class="card-thumb">
+          <img class="card-thumb-img" src="img/tool-text-to-image.png" alt="Text to Image">
           <div class="card-thumb-overlay"></div>
         </div>
         <div class="card-body">
@@ -1129,13 +1125,8 @@
       <!-- Video to Video -->
       <div class="tool-card" data-category="video" data-tool="video_to_video" data-replicate
         style="animation-delay:0.16s" onclick="openModal('video_to_video')">
-        <div class="card-thumb bg-purple">
-          <div class="card-icon-wrap icon-purple">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
-              <path
-                d="M15 10l4.553-2.069A1 1 0 0121 8.87v6.26a1 1 0 01-1.447.894L15 14M3 8a2 2 0 012-2h8a2 2 0 012 2v8a2 2 0 01-2 2H5a2 2 0 01-2-2V8z" />
-            </svg>
-          </div>
+        <div class="card-thumb">
+          <img class="card-thumb-img" src="img/tool-video-to-video.png" alt="Video to Video">
           <div class="card-thumb-overlay"></div>
         </div>
         <div class="card-body">
@@ -1158,13 +1149,8 @@
       <!-- Voice Clone -->
       <div class="tool-card" data-category="audio new" data-tool="voice_clone" style="animation-delay:0.20s"
         onclick="openModal('voice_clone')">
-        <div class="card-thumb bg-green">
-          <div class="card-icon-wrap icon-green">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
-              <path d="M12 1a3 3 0 00-3 3v8a3 3 0 006 0V4a3 3 0 00-3-3z" />
-              <path d="M19 10v2a7 7 0 01-14 0v-2M12 19v4m-4 0h8" />
-            </svg>
-          </div>
+        <div class="card-thumb">
+          <img class="card-thumb-img" src="img/tool-voice-clone.png" alt="Voice Clone">
           <div class="card-thumb-overlay"></div>
         </div>
         <div class="card-body">
@@ -1187,13 +1173,8 @@
       <!-- Background Remover -->
       <div class="tool-card" data-category="image" data-tool="background_remove" data-replicate
         style="animation-delay:0.24s" onclick="openModal('background_remove')">
-        <div class="card-thumb bg-red">
-          <div class="card-icon-wrap icon-red">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
-              <path d="M21 9l-9-7-9 7v11a2 2 0 002 2h14a2 2 0 002-2V9z" />
-              <polyline points="9 22 9 12 15 12 15 22" />
-            </svg>
-          </div>
+        <div class="card-thumb">
+          <img class="card-thumb-img" src="img/tool-background-remove.png" alt="Background Remove">
           <div class="card-thumb-overlay"></div>
         </div>
         <div class="card-body">
@@ -1216,12 +1197,8 @@
       <!-- AI Animation -->
       <div class="tool-card" data-category="video new" data-tool="ai_animation" data-replicate
         style="animation-delay:0.28s" onclick="openModal('ai_animation')">
-        <div class="card-thumb bg-pink">
-          <div class="card-icon-wrap icon-pink">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
-              <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2" />
-            </svg>
-          </div>
+        <div class="card-thumb">
+          <img class="card-thumb-img" src="img/tool-ai-animation.png" alt="AI Animation">
           <div class="card-thumb-overlay"></div>
         </div>
         <div class="card-body">
@@ -1244,12 +1221,8 @@
       <!-- Image Upscaler -->
       <div class="tool-card" data-category="image" data-tool="image_upscaler" data-replicate
         style="animation-delay:0.32s" onclick="openModal('image_upscaler')">
-        <div class="card-thumb bg-gold">
-          <div class="card-icon-wrap icon-gold">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
-              <path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7" />
-            </svg>
-          </div>
+        <div class="card-thumb">
+          <img class="card-thumb-img" src="img/tool-image-upscaler.png" alt="Image Upscaler">
           <div class="card-thumb-overlay"></div>
         </div>
         <div class="card-body">
@@ -1272,14 +1245,8 @@
       <!-- Lipsync -->
       <div class="tool-card" data-category="video audio" data-tool="lipsync" style="animation-delay:0.36s"
         onclick="openModal('lipsync')">
-        <div class="card-thumb bg-blue">
-          <div class="card-icon-wrap icon-blue">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
-              <path d="M9 18V5l12-2v13" />
-              <circle cx="6" cy="18" r="3" />
-              <circle cx="18" cy="16" r="3" />
-            </svg>
-          </div>
+        <div class="card-thumb">
+          <img class="card-thumb-img" src="img/tool-lipsync.png" alt="Lipsync Video">
           <div class="card-thumb-overlay"></div>
         </div>
         <div class="card-body">
@@ -1302,13 +1269,8 @@
       <!-- Text to Speech -->
       <div class="tool-card" data-category="audio" data-tool="text_to_speech" style="animation-delay:0.40s"
         onclick="openModal('text_to_speech')">
-        <div class="card-thumb bg-green">
-          <div class="card-icon-wrap icon-green">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
-              <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5" />
-              <path d="M15.54 8.46a5 5 0 010 7.07M19.07 4.93a10 10 0 010 14.14" />
-            </svg>
-          </div>
+        <div class="card-thumb">
+          <img class="card-thumb-img" src="img/tool-text-to-speech.png" alt="Text to Speech">
           <div class="card-thumb-overlay"></div>
         </div>
         <div class="card-body">
@@ -1331,14 +1293,8 @@
       <!-- Talking Photo -->
       <div class="tool-card" data-category="video image" data-tool="talking_photo" style="animation-delay:0.44s"
         onclick="openModal('talking_photo')">
-        <div class="card-thumb bg-purple">
-          <div class="card-icon-wrap icon-purple">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
-              <circle cx="12" cy="8" r="4" />
-              <path d="M6 20v-1a6 6 0 0112 0v1" />
-              <path d="M19 3l-2 2 2 2" />
-            </svg>
-          </div>
+        <div class="card-thumb">
+          <img class="card-thumb-img" src="img/tool-talking-photo.png" alt="Talking Photo">
           <div class="card-thumb-overlay"></div>
         </div>
         <div class="card-body">
@@ -1361,12 +1317,8 @@
       <!-- Style Transfer -->
       <div class="tool-card" data-category="image new" data-tool="style_transfer" data-replicate
         style="animation-delay:0.48s" onclick="openModal('style_transfer')">
-        <div class="card-thumb bg-red">
-          <div class="card-icon-wrap icon-red">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
-              <path d="M12 20h9M16.5 3.5a2.121 2.121 0 013 3L7 19l-4 1 1-4L16.5 3.5z" />
-            </svg>
-          </div>
+        <div class="card-thumb">
+          <img class="card-thumb-img" src="img/tool-style-transfer.png" alt="Style Transfer">
           <div class="card-thumb-overlay"></div>
         </div>
         <div class="card-body">
