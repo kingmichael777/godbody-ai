@@ -643,7 +643,7 @@
     </main>
 
     <script>
-        const BACKEND = 'http://localhost:3001';
+        const BACKEND = (location.hostname === 'localhost' || location.hostname === '127.0.0.1') ? 'http://localhost:3001' : 'https://godbody-ai-production.up.railway.app';
         const USER_ID = 'demo-user';
         let state = { targetUrl: null, swapUrl: null };
         function fmt(b) { return b < 1048576 ? (b / 1024).toFixed(1) + ' KB' : (b / 1048576).toFixed(1) + ' MB'; }

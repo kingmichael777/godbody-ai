@@ -194,7 +194,7 @@
     </div>
 
     <script>
-        const BACKEND = 'http://localhost:3001';
+        const BACKEND = (location.hostname === 'localhost' || location.hostname === '127.0.0.1') ? 'http://localhost:3001' : 'https://godbody-ai-production.up.railway.app';
 
         document.getElementById('loginForm').addEventListener('submit', async (e) => {
             e.preventDefault();
