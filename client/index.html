@@ -2037,9 +2037,10 @@
     // UPLOAD FILE TO SERVER
     // ═══════════════════════════════════
     async function uploadFile(file) {
+      const BACKEND = (location.hostname === 'localhost' || location.hostname === '127.0.0.1') ? 'http://localhost:3001' : 'https://godbody-ai-production.up.railway.app';
       const form = new FormData();
       form.append('file', file);
-      const res = await fetch('http://localhost:3001/api/upload', {
+      const res = await fetch(`${BACKEND}/api/upload`, {
         method: 'POST',
         headers: { 'x-user-id': 'demo-user' },
         body: form,
@@ -2226,7 +2227,8 @@
         }
         if (badge) badge.style.display = 'none';
 
-        const res = await fetch('http://localhost:3001/api/jobs/credits/balance', {
+        const BACKEND = (location.hostname === 'localhost' || location.hostname === '127.0.0.1') ? 'http://localhost:3001' : 'https://godbody-ai-production.up.railway.app';
+        const res = await fetch(`${BACKEND}/api/jobs/credits/balance`, {
           headers: { 'x-user-id': userId }
         });
         const data = await res.json();

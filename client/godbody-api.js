@@ -1,7 +1,10 @@
 ﻿// client/GODBODY-api.js
 // Godbody AI Frontend API Client
 
-const BACKEND_URL = 'http://localhost:3001';
+const BACKEND_URL = (typeof location !== 'undefined' && location.hostname !== 'localhost' && location.hostname !== '127.0.0.1')
+    ? 'https://godbody-ai-production.up.railway.app'
+    : 'http://localhost:3001';
+
 
 // Session: reads from localStorage so admin logins persist across pages
 function getUserId() {
