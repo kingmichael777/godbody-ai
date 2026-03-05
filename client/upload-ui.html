@@ -1,0 +1,1105 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Godbody AI — Upload Files</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;1,9..40,300&display=swap"
+        rel="stylesheet">
+    <style>
+        *,
+        *::before,
+        *::after {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        :root {
+            --bg: #080a0f;
+            --bg2: #0e1118;
+            --bg3: #131720;
+            --border: rgba(255, 255, 255, 0.07);
+            --border-hover: rgba(255, 255, 255, 0.18);
+            --text: #f0f2f7;
+            --muted: #8b90a0;
+            --dim: #4a5060;
+            --accent: #c8a96e;
+            --accent2: #7c6bde;
+            --accent3: #3ecf8e;
+        }
+
+        body {
+            background: var(--bg);
+            color: var(--text);
+            font-family: 'DM Sans', sans-serif;
+            font-size: 15px;
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        body::before {
+            content: '';
+            position: fixed;
+            inset: 0;
+            z-index: 0;
+            pointer-events: none;
+            background:
+                radial-gradient(ellipse 70% 40% at 50% -5%, rgba(124, 107, 222, 0.14) 0%, transparent 60%),
+                radial-gradient(ellipse 50% 30% at 90% 80%, rgba(200, 169, 110, 0.07) 0%, transparent 50%);
+        }
+
+        nav {
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 32px;
+            height: 64px;
+            background: rgba(8, 10, 15, 0.9);
+            backdrop-filter: blur(20px);
+            border-bottom: 1px solid var(--border);
+        }
+
+        .nav-logo {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-family: 'Syne', sans-serif;
+            font-weight: 700;
+            font-size: 17px;
+            color: var(--text);
+            text-decoration: none;
+        }
+
+        .logo-mark {
+            width: 30px;
+            height: 30px;
+            background: linear-gradient(135deg, #c8a96e, #7c6bde);
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 13px;
+            font-weight: 800;
+            color: #fff;
+        }
+
+        .nav-back {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            padding: 7px 16px;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            background: rgba(255, 255, 255, 0.04);
+            color: var(--muted);
+            font-size: 13px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.18s;
+            text-decoration: none;
+        }
+
+        .nav-back:hover {
+            border-color: var(--border-hover);
+            color: var(--text);
+        }
+
+        .nav-back svg {
+            width: 14px;
+            height: 14px;
+        }
+
+        main {
+            position: relative;
+            z-index: 1;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 60px 32px 100px;
+        }
+
+        .page-eyebrow {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 4px 12px;
+            background: rgba(124, 107, 222, 0.1);
+            border: 1px solid rgba(124, 107, 222, 0.2);
+            border-radius: 20px;
+            font-size: 11px;
+            font-weight: 600;
+            color: #a89ce0;
+            text-transform: uppercase;
+            letter-spacing: 1.2px;
+            margin-bottom: 20px;
+        }
+
+        h1 {
+            font-family: 'Syne', sans-serif;
+            font-size: 36px;
+            font-weight: 800;
+            letter-spacing: -1.5px;
+            margin-bottom: 10px;
+            line-height: 1.1;
+        }
+
+        h1 span {
+            background: linear-gradient(120deg, #c8a96e 0%, #e8c88e 50%, #7c6bde 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .page-sub {
+            color: var(--muted);
+            font-size: 15px;
+            line-height: 1.6;
+            margin-bottom: 48px;
+        }
+
+        /* ── UPLOAD SLOTS ── */
+        .slots {
+            display: flex;
+            flex-direction: column;
+            gap: 24px;
+            margin-bottom: 32px;
+        }
+
+        .slot-card {
+            background: var(--bg2);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            overflow: hidden;
+            transition: border-color 0.2s;
+        }
+
+        .slot-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 16px 20px;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .slot-header-left {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .slot-icon {
+            width: 36px;
+            height: 36px;
+            border-radius: 9px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+
+        .slot-icon svg {
+            width: 18px;
+            height: 18px;
+        }
+
+        .icon-image {
+            background: rgba(200, 169, 110, 0.12);
+            color: var(--accent);
+        }
+
+        .icon-audio {
+            background: rgba(62, 207, 142, 0.12);
+            color: var(--accent3);
+        }
+
+        .icon-video {
+            background: rgba(124, 107, 222, 0.12);
+            color: var(--accent2);
+        }
+
+        .slot-name {
+            font-family: 'Syne', sans-serif;
+            font-size: 14px;
+            font-weight: 700;
+        }
+
+        .slot-desc {
+            font-size: 12px;
+            color: var(--dim);
+            margin-top: 2px;
+        }
+
+        .slot-status {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 12px;
+        }
+
+        .status-dot {
+            width: 7px;
+            height: 7px;
+            border-radius: 50%;
+        }
+
+        .status-dot.empty {
+            background: var(--dim);
+        }
+
+        .status-dot.ready {
+            background: var(--accent3);
+        }
+
+        .status-dot.uploading {
+            background: var(--accent2);
+            animation: pulse 1.2s ease-in-out infinite;
+        }
+
+        .status-dot.error {
+            background: #f08080;
+        }
+
+        @keyframes pulse {
+
+            0%,
+            100% {
+                opacity: 1;
+                transform: scale(1)
+            }
+
+            50% {
+                opacity: 0.5;
+                transform: scale(0.75)
+            }
+        }
+
+        /* ── DROP ZONE ── */
+        .drop-zone {
+            padding: 32px 24px;
+            text-align: center;
+            cursor: pointer;
+            transition: background 0.2s;
+            border: 2px dashed transparent;
+            border-radius: 0 0 14px 14px;
+        }
+
+        .drop-zone:hover {
+            background: rgba(124, 107, 222, 0.04);
+        }
+
+        .drop-zone.drag-over {
+            background: rgba(124, 107, 222, 0.08);
+            border-color: var(--accent2);
+        }
+
+        .drop-icon {
+            width: 48px;
+            height: 48px;
+            border-radius: 12px;
+            background: rgba(255, 255, 255, 0.04);
+            border: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 12px;
+        }
+
+        .drop-icon svg {
+            width: 22px;
+            height: 22px;
+            color: var(--muted);
+        }
+
+        .drop-zone h3 {
+            font-family: 'Syne', sans-serif;
+            font-size: 14px;
+            font-weight: 600;
+            margin-bottom: 4px;
+        }
+
+        .drop-zone p {
+            font-size: 12px;
+            color: var(--dim);
+        }
+
+        .drop-zone .drop-or {
+            font-size: 11px;
+            color: var(--dim);
+            margin: 10px 0;
+        }
+
+        .btn-browse {
+            padding: 7px 18px;
+            background: rgba(255, 255, 255, 0.06);
+            border: 1px solid var(--border);
+            border-radius: 7px;
+            color: var(--text);
+            font-size: 13px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.18s;
+            display: inline-block;
+        }
+
+        .btn-browse:hover {
+            background: rgba(255, 255, 255, 0.1);
+            border-color: var(--border-hover);
+        }
+
+        /* ── FILE PREVIEW (shown after pick) ── */
+        .file-preview {
+            display: none;
+            padding: 16px 20px;
+            align-items: center;
+            gap: 12px;
+            background: rgba(62, 207, 142, 0.04);
+        }
+
+        .file-preview.show {
+            display: flex;
+        }
+
+        .preview-thumb {
+            width: 48px;
+            height: 48px;
+            border-radius: 8px;
+            overflow: hidden;
+            flex-shrink: 0;
+            background: var(--bg3);
+            border: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .preview-thumb img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .preview-thumb svg {
+            width: 20px;
+            height: 20px;
+            color: var(--accent3);
+        }
+
+        .preview-info {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .preview-name {
+            font-size: 13px;
+            font-weight: 500;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .preview-size {
+            font-size: 11px;
+            color: var(--dim);
+            margin-top: 2px;
+        }
+
+        .preview-remove {
+            width: 30px;
+            height: 30px;
+            border-radius: 7px;
+            background: rgba(240, 128, 128, 0.08);
+            border: 1px solid rgba(240, 128, 128, 0.15);
+            color: #f08080;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.18s;
+            flex-shrink: 0;
+        }
+
+        .preview-remove:hover {
+            background: rgba(240, 128, 128, 0.15);
+        }
+
+        .preview-remove svg {
+            width: 14px;
+            height: 14px;
+        }
+
+        /* Upload progress */
+        .upload-progress-wrap {
+            display: none;
+            padding: 12px 20px 16px;
+            background: rgba(124, 107, 222, 0.04);
+        }
+
+        .upload-progress-wrap.show {
+            display: block;
+        }
+
+        .progress-track {
+            height: 3px;
+            background: var(--bg3);
+            border-radius: 2px;
+            overflow: hidden;
+            margin-bottom: 6px;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--accent2), var(--accent));
+            border-radius: 2px;
+            width: 0;
+            transition: width 0.4s ease;
+        }
+
+        .progress-text {
+            font-size: 11px;
+            color: var(--muted);
+        }
+
+        /* ── SUMMARY ── */
+        .summary-card {
+            background: var(--bg2);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 24px;
+            margin-bottom: 24px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 20px;
+        }
+
+        .summary-items {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            flex-wrap: wrap;
+        }
+
+        .summary-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 13px;
+        }
+
+        .summary-check {
+            width: 18px;
+            height: 18px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .summary-check.ok {
+            background: rgba(62, 207, 142, 0.15);
+            color: var(--accent3);
+        }
+
+        .summary-check.ng {
+            background: rgba(255, 255, 255, 0.05);
+            color: var(--dim);
+        }
+
+        .summary-check svg {
+            width: 10px;
+            height: 10px;
+        }
+
+        .btn-upload-all {
+            padding: 12px 28px;
+            background: linear-gradient(135deg, var(--accent2), #5c4dbe);
+            border: none;
+            border-radius: 9px;
+            color: #fff;
+            font-family: 'Syne', sans-serif;
+            font-size: 14px;
+            font-weight: 700;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: all 0.2s;
+            white-space: nowrap;
+            flex-shrink: 0;
+        }
+
+        .btn-upload-all:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 6px 24px rgba(124, 107, 222, 0.4);
+        }
+
+        .btn-upload-all:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+
+        .btn-upload-all svg {
+            width: 16px;
+            height: 16px;
+        }
+
+        /* ── RESULT ── */
+        .result-banner {
+            display: none;
+            border-radius: 12px;
+            padding: 20px 24px;
+            margin-bottom: 24px;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .result-banner.show {
+            display: flex;
+        }
+
+        .result-banner.success {
+            background: rgba(62, 207, 142, 0.07);
+            border: 1px solid rgba(62, 207, 142, 0.2);
+        }
+
+        .result-banner.error {
+            background: rgba(240, 128, 128, 0.07);
+            border: 1px solid rgba(240, 128, 128, 0.2);
+        }
+
+        .result-banner svg {
+            width: 22px;
+            height: 22px;
+            flex-shrink: 0;
+        }
+
+        .result-banner.success svg {
+            color: var(--accent3);
+        }
+
+        .result-banner.error svg {
+            color: #f08080;
+        }
+
+        .result-title {
+            font-family: 'Syne', sans-serif;
+            font-size: 14px;
+            font-weight: 700;
+            margin-bottom: 4px;
+        }
+
+        .result-body {
+            font-size: 13px;
+            color: var(--muted);
+        }
+
+        .uploaded-urls {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 12px 16px;
+            margin-top: 12px;
+            font-size: 12px;
+            color: var(--dim);
+            word-break: break-all;
+            line-height: 1.8;
+        }
+
+        .uploaded-urls strong {
+            color: var(--muted);
+            display: block;
+            margin-bottom: 4px;
+        }
+
+        /* responsive */
+        @media (max-width: 600px) {
+            nav {
+                padding: 0 16px;
+            }
+
+            main {
+                padding: 32px 16px 60px;
+            }
+
+            h1 {
+                font-size: 26px;
+            }
+
+            .summary-card {
+                flex-direction: column;
+                align-items: stretch;
+            }
+
+            .btn-upload-all {
+                width: 100%;
+                justify-content: center;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <nav>
+        <a href="index.html" class="nav-logo">
+            <div class="logo-mark">N</div>
+            Godbody AI
+        </a>
+        <a href="index.html" class="nav-back">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M19 12H5M12 5l-7 7 7 7" />
+            </svg>
+            Back to tools
+        </a>
+    </nav>
+
+    <main>
+
+        <div class="page-eyebrow">
+            <svg width="6" height="6" viewBox="0 0 6 6" fill="currentColor">
+                <circle cx="3" cy="3" r="3" />
+            </svg>
+            File Upload
+        </div>
+        <h1>Upload your <span>media files.</span></h1>
+        <p class="page-sub">Drop your photos, audio, and video files here. Files are securely uploaded and returned as
+            URLs ready for generation.</p>
+
+        <!-- RESULT BANNER (shown after upload completes) -->
+        <div class="result-banner" id="resultBanner">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                <polyline points="20 6 9 17 4 12" />
+            </svg>
+            <div>
+                <div class="result-title" id="resultTitle">Files uploaded.</div>
+                <div class="result-body" id="resultBody">Your files are ready to use.</div>
+                <div class="uploaded-urls" id="uploadedUrls" style="display:none"></div>
+            </div>
+        </div>
+
+        <!-- UPLOAD SLOTS -->
+        <div class="slots" id="slots">
+
+            <!-- Photo slot -->
+            <div class="slot-card" id="card-photo">
+                <div class="slot-header">
+                    <div class="slot-header-left">
+                        <div class="slot-icon icon-image">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                                <rect x="3" y="3" width="18" height="18" rx="2" />
+                                <circle cx="8.5" cy="8.5" r="1.5" />
+                                <path d="M21 15l-5-5L5 21" />
+                            </svg>
+                        </div>
+                        <div>
+                            <div class="slot-name">Photo</div>
+                            <div class="slot-desc">Face images for Talking Photo, AI Headshots, Face Swap</div>
+                        </div>
+                    </div>
+                    <div class="slot-status" id="status-photo">
+                        <div class="status-dot empty" id="dot-photo"></div>
+                        <span id="status-label-photo">No file</span>
+                    </div>
+                </div>
+                <div class="file-preview" id="preview-photo">
+                    <div class="preview-thumb" id="thumb-photo">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                            <rect x="3" y="3" width="18" height="18" rx="2" />
+                            <circle cx="8.5" cy="8.5" r="1.5" />
+                            <path d="M21 15l-5-5L5 21" />
+                        </svg>
+                    </div>
+                    <div class="preview-info">
+                        <div class="preview-name" id="fname-photo"></div>
+                        <div class="preview-size" id="fsize-photo"></div>
+                    </div>
+                    <div class="preview-remove" onclick="removeFile('photo')" title="Remove">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M18 6L6 18M6 6l12 12" />
+                        </svg>
+                    </div>
+                </div>
+                <div class="upload-progress-wrap" id="progress-photo">
+                    <div class="progress-track">
+                        <div class="progress-fill" id="fill-photo"></div>
+                    </div>
+                    <div class="progress-text" id="ptxt-photo">Uploading...</div>
+                </div>
+                <div class="drop-zone" id="zone-photo" onclick="triggerPick('photo')"
+                    ondragover="onDragOver(event,'photo')" ondragleave="onDragLeave('photo')"
+                    ondrop="onDrop(event,'photo')">
+                    <div class="drop-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                            <path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4" />
+                            <polyline points="17 8 12 3 7 8" />
+                            <line x1="12" y1="3" x2="12" y2="15" />
+                        </svg>
+                    </div>
+                    <h3>Drop photo here</h3>
+                    <p>JPG, PNG, WEBP — max 10 MB</p>
+                    <div class="drop-or">— or —</div>
+                    <span class="btn-browse">Browse files</span>
+                </div>
+                <input type="file" id="file-photo" accept="image/*" style="display:none"
+                    onchange="onFilePicked('photo', this)">
+            </div>
+
+            <!-- Audio slot -->
+            <div class="slot-card" id="card-audio">
+                <div class="slot-header">
+                    <div class="slot-header-left">
+                        <div class="slot-icon icon-audio">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                                <path d="M12 1a3 3 0 00-3 3v8a3 3 0 006 0V4a3 3 0 00-3-3z" />
+                                <path d="M19 10v2a7 7 0 01-14 0v-2M12 19v4m-4 0h8" />
+                            </svg>
+                        </div>
+                        <div>
+                            <div class="slot-name">Audio</div>
+                            <div class="slot-desc">Voice recordings for Talking Photo, Lipsync, Voice Clone</div>
+                        </div>
+                    </div>
+                    <div class="slot-status" id="status-audio">
+                        <div class="status-dot empty" id="dot-audio"></div>
+                        <span id="status-label-audio">No file</span>
+                    </div>
+                </div>
+                <div class="file-preview" id="preview-audio">
+                    <div class="preview-thumb" id="thumb-audio">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                            <path d="M12 1a3 3 0 00-3 3v8a3 3 0 006 0V4a3 3 0 00-3-3z" />
+                            <path d="M19 10v2a7 7 0 01-14 0v-2M12 19v4m-4 0h8" />
+                        </svg>
+                    </div>
+                    <div class="preview-info">
+                        <div class="preview-name" id="fname-audio"></div>
+                        <div class="preview-size" id="fsize-audio"></div>
+                    </div>
+                    <div class="preview-remove" onclick="removeFile('audio')" title="Remove">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M18 6L6 18M6 6l12 12" />
+                        </svg>
+                    </div>
+                </div>
+                <div class="upload-progress-wrap" id="progress-audio">
+                    <div class="progress-track">
+                        <div class="progress-fill" id="fill-audio"></div>
+                    </div>
+                    <div class="progress-text" id="ptxt-audio">Uploading...</div>
+                </div>
+                <div class="drop-zone" id="zone-audio" onclick="triggerPick('audio')"
+                    ondragover="onDragOver(event,'audio')" ondragleave="onDragLeave('audio')"
+                    ondrop="onDrop(event,'audio')">
+                    <div class="drop-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                            <path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4" />
+                            <polyline points="17 8 12 3 7 8" />
+                            <line x1="12" y1="3" x2="12" y2="15" />
+                        </svg>
+                    </div>
+                    <h3>Drop audio here</h3>
+                    <p>MP3, WAV, M4A, OGG — max 30 MB</p>
+                    <div class="drop-or">— or —</div>
+                    <span class="btn-browse">Browse files</span>
+                </div>
+                <input type="file" id="file-audio" accept="audio/*" style="display:none"
+                    onchange="onFilePicked('audio', this)">
+            </div>
+
+            <!-- Video slot -->
+            <div class="slot-card" id="card-video">
+                <div class="slot-header">
+                    <div class="slot-header-left">
+                        <div class="slot-icon icon-video">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                                <path
+                                    d="M15 10l4.553-2.069A1 1 0 0121 8.87v6.26a1 1 0 01-1.447.894L15 14M3 8a2 2 0 012-2h8a2 2 0 012 2v8a2 2 0 01-2 2H5a2 2 0 01-2-2V8z" />
+                            </svg>
+                        </div>
+                        <div>
+                            <div class="slot-name">Video</div>
+                            <div class="slot-desc">Video files for Lipsync, Video Translate, Video to Video</div>
+                        </div>
+                    </div>
+                    <div class="slot-status" id="status-video">
+                        <div class="status-dot empty" id="dot-video"></div>
+                        <span id="status-label-video">No file</span>
+                    </div>
+                </div>
+                <div class="file-preview" id="preview-video">
+                    <div class="preview-thumb" id="thumb-video">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                            <path
+                                d="M15 10l4.553-2.069A1 1 0 0121 8.87v6.26a1 1 0 01-1.447.894L15 14M3 8a2 2 0 012-2h8a2 2 0 012 2v8a2 2 0 01-2 2H5a2 2 0 01-2-2V8z" />
+                        </svg>
+                    </div>
+                    <div class="preview-info">
+                        <div class="preview-name" id="fname-video"></div>
+                        <div class="preview-size" id="fsize-video"></div>
+                    </div>
+                    <div class="preview-remove" onclick="removeFile('video')" title="Remove">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M18 6L6 18M6 6l12 12" />
+                        </svg>
+                    </div>
+                </div>
+                <div class="upload-progress-wrap" id="progress-video">
+                    <div class="progress-track">
+                        <div class="progress-fill" id="fill-video"></div>
+                    </div>
+                    <div class="progress-text" id="ptxt-video">Uploading...</div>
+                </div>
+                <div class="drop-zone" id="zone-video" onclick="triggerPick('video')"
+                    ondragover="onDragOver(event,'video')" ondragleave="onDragLeave('video')"
+                    ondrop="onDrop(event,'video')">
+                    <div class="drop-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                            <path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4" />
+                            <polyline points="17 8 12 3 7 8" />
+                            <line x1="12" y1="3" x2="12" y2="15" />
+                        </svg>
+                    </div>
+                    <h3>Drop video here</h3>
+                    <p>MP4, MOV, AVI — max 100 MB</p>
+                    <div class="drop-or">— or —</div>
+                    <span class="btn-browse">Browse files</span>
+                </div>
+                <input type="file" id="file-video" accept="video/*" style="display:none"
+                    onchange="onFilePicked('video', this)">
+            </div>
+
+        </div>
+
+        <!-- SUMMARY + UPLOAD BTN -->
+        <div class="summary-card">
+            <div class="summary-items" id="summaryItems">
+                <div class="summary-item">
+                    <div class="summary-check ng" id="chk-photo">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3">
+                            <polyline points="20 6 9 17 4 12" />
+                        </svg>
+                    </div>
+                    <span>Photo</span>
+                </div>
+                <div class="summary-item">
+                    <div class="summary-check ng" id="chk-audio">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3">
+                            <polyline points="20 6 9 17 4 12" />
+                        </svg>
+                    </div>
+                    <span>Audio</span>
+                </div>
+                <div class="summary-item">
+                    <div class="summary-check ng" id="chk-video">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3">
+                            <polyline points="20 6 9 17 4 12" />
+                        </svg>
+                    </div>
+                    <span>Video</span>
+                </div>
+            </div>
+            <button class="btn-upload-all" id="uploadAllBtn" onclick="uploadAll()" disabled>
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4" />
+                    <polyline points="17 8 12 3 7 8" />
+                    <line x1="12" y1="3" x2="12" y2="15" />
+                </svg>
+                Upload All
+            </button>
+        </div>
+
+    </main>
+
+    <script>
+        const BACKEND = 'http://localhost:3001';
+        const SLOTS = ['photo', 'audio', 'video'];
+        const files = { photo: null, audio: null, video: null };
+        const urls = { photo: null, audio: null, video: null };
+
+        // ── DRAG & DROP ──
+        function onDragOver(e, slot) {
+            e.preventDefault();
+            document.getElementById('zone-' + slot).classList.add('drag-over');
+        }
+        function onDragLeave(slot) {
+            document.getElementById('zone-' + slot).classList.remove('drag-over');
+        }
+        function onDrop(e, slot) {
+            e.preventDefault();
+            onDragLeave(slot);
+            const file = e.dataTransfer.files[0];
+            if (file) setFile(slot, file);
+        }
+        function triggerPick(slot) {
+            document.getElementById('file-' + slot).click();
+        }
+        function onFilePicked(slot, input) {
+            const file = input.files[0];
+            if (file) setFile(slot, file);
+        }
+
+        // ── FILE STATE ──
+        function setFile(slot, file) {
+            files[slot] = file;
+            urls[slot] = null;
+
+            // Show preview
+            document.getElementById('zone-' + slot).style.display = 'none';
+            const prev = document.getElementById('preview-' + slot);
+            prev.classList.add('show');
+            document.getElementById('fname-' + slot).textContent = file.name;
+            document.getElementById('fsize-' + slot).textContent = formatBytes(file.size);
+
+            // Thumbnail for images
+            if (file.type.startsWith('image/')) {
+                const reader = new FileReader();
+                reader.onload = e => {
+                    document.getElementById('thumb-' + slot).innerHTML =
+                        `<img src="${e.target.result}" alt="">`;
+                };
+                reader.readAsDataURL(file);
+            }
+
+            setStatus(slot, 'ready', 'Ready to upload');
+            updateSummary();
+        }
+
+        function removeFile(slot) {
+            files[slot] = null;
+            urls[slot] = null;
+            document.getElementById('preview-' + slot).classList.remove('show');
+            document.getElementById('progress-' + slot).classList.remove('show');
+            document.getElementById('zone-' + slot).style.display = '';
+            document.getElementById('thumb-' + slot).innerHTML = slotDefaultSvg(slot);
+            document.getElementById('file-' + slot).value = '';
+            setStatus(slot, 'empty', 'No file');
+            updateSummary();
+        }
+
+        function slotDefaultSvg(slot) {
+            const svgs = {
+                photo: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="M21 15l-5-5L5 21"/></svg>',
+                audio: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 1a3 3 0 00-3 3v8a3 3 0 006 0V4a3 3 0 00-3-3z"/><path d="M19 10v2a7 7 0 01-14 0v-2M12 19v4m-4 0h8"/></svg>',
+                video: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M15 10l4.553-2.069A1 1 0 0121 8.87v6.26a1 1 0 01-1.447.894L15 14M3 8a2 2 0 012-2h8a2 2 0 012 2v8a2 2 0 01-2 2H5a2 2 0 01-2-2V8z"/></svg>',
+            };
+            return svgs[slot] || '';
+        }
+
+        function setStatus(slot, state, label) {
+            const dot = document.getElementById('dot-' + slot);
+            dot.className = 'status-dot ' + state;
+            document.getElementById('status-label-' + slot).textContent = label;
+        }
+
+        function updateSummary() {
+            const hasAny = SLOTS.some(s => files[s]);
+            document.getElementById('uploadAllBtn').disabled = !hasAny;
+
+            SLOTS.forEach(slot => {
+                const chk = document.getElementById('chk-' + slot);
+                if (files[slot]) {
+                    chk.className = 'summary-check ok';
+                } else {
+                    chk.className = 'summary-check ng';
+                }
+            });
+        }
+
+        // ── UPLOAD ──
+        async function uploadAll() {
+            const btn = document.getElementById('uploadAllBtn');
+            btn.disabled = true;
+            btn.textContent = 'Uploading...';
+
+            const results = {};
+            let hasError = false;
+
+            for (const slot of SLOTS) {
+                if (!files[slot]) continue;
+                try {
+                    setStatus(slot, 'uploading', 'Uploading...');
+                    document.getElementById('progress-' + slot).classList.add('show');
+                    animateProgress(slot);
+
+                    const url = await uploadFile(slot, files[slot]);
+                    urls[slot] = url;
+                    results[slot] = url;
+                    setStatus(slot, 'ready', '✓ Uploaded');
+                    document.getElementById('fill-' + slot).style.width = '100%';
+                    document.getElementById('ptxt-' + slot).textContent = 'Upload complete';
+
+                } catch (err) {
+                    setStatus(slot, 'error', 'Failed: ' + err.message);
+                    document.getElementById('ptxt-' + slot).textContent = 'Upload failed';
+                    hasError = true;
+                }
+            }
+
+            if (hasError) {
+                showResult('error', 'Some uploads failed.', 'Check errors above and try again.');
+            } else {
+                const lines = Object.entries(results).map(([k, v]) => `<b>${k}:</b> ${v}`).join('<br>');
+                showResult('success', 'All files uploaded!', 'Copy the URLs below to use in any tool.', lines);
+            }
+
+            btn.disabled = false;
+            btn.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg> Upload Again';
+        }
+
+        async function uploadFile(slot, file) {
+            const form = new FormData();
+            form.append('file', file);
+            const res = await fetch(`${BACKEND}/api/upload`, {
+                method: 'POST',
+                headers: { 'x-user-id': 'demo-user' },
+                body: form,
+            });
+            const data = await res.json();
+            if (!res.ok) throw new Error(data.error || 'Upload failed');
+            return data.url || data.fileUrl || data.localUrl || JSON.stringify(data);
+        }
+
+        function animateProgress(slot) {
+            const fill = document.getElementById('fill-' + slot);
+            let pct = 0;
+            const t = setInterval(() => {
+                pct = Math.min(pct + Math.random() * 15, 90);
+                fill.style.width = pct + '%';
+                if (pct >= 90) clearInterval(t);
+            }, 300);
+        }
+
+        function showResult(type, title, body, urlHtml = '') {
+            const banner = document.getElementById('resultBanner');
+            banner.className = 'result-banner show ' + type;
+            banner.querySelector('svg').outerHTML; // re-render handled by class change
+            document.getElementById('resultTitle').textContent = title;
+            document.getElementById('resultBody').textContent = body;
+            const urlEl = document.getElementById('uploadedUrls');
+            if (urlHtml) {
+                urlEl.style.display = 'block';
+                urlEl.innerHTML = '<strong>File URLs:</strong>' + urlHtml;
+            } else {
+                urlEl.style.display = 'none';
+            }
+            banner.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+        }
+
+        // ── HELPERS ──
+        function formatBytes(b) {
+            if (b < 1024) return b + ' B';
+            if (b < 1048576) return (b / 1024).toFixed(1) + ' KB';
+            return (b / 1048576).toFixed(1) + ' MB';
+        }
+    </script>
+</body>
+
+</html>

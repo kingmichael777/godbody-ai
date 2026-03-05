@@ -1,0 +1,19 @@
+# Dependencies
+node_modules/
+
+# Environment secrets — NEVER commit this
+.env
+.env.local
+.env.production
+
+# Uploads (local dev only)
+uploads/
+logs/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Editor
+.vscode/
+*.swp

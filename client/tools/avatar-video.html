@@ -1,0 +1,775 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Godbody AI — Avatar Video</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500&display=swap"
+        rel="stylesheet">
+    <style>
+        *,
+        *::before,
+        *::after {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0
+        }
+
+        :root {
+            --bg: #080a0f;
+            --bg2: #0e1118;
+            --bg3: #131720;
+            --border: rgba(255, 255, 255, 0.07);
+            --text: #f0f2f7;
+            --muted: #8b90a0;
+            --dim: #4a5060;
+            --accent: #c8a96e;
+            --purple: #7c6bde;
+            --green: #3ecf8e;
+            --error: #f08080
+        }
+
+        body {
+            background: var(--bg);
+            color: var(--text);
+            font-family: 'DM Sans', sans-serif;
+            font-size: 15px;
+            min-height: 100vh
+        }
+
+        body::before {
+            content: '';
+            position: fixed;
+            inset: 0;
+            background: radial-gradient(ellipse 70% 40% at 50% 0%, rgba(124, 107, 222, 0.08) 0%, transparent 60%);
+            pointer-events: none;
+            z-index: 0
+        }
+
+        nav {
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 32px;
+            height: 64px;
+            background: rgba(8, 10, 15, 0.9);
+            backdrop-filter: blur(20px);
+            border-bottom: 1px solid var(--border)
+        }
+
+        .nav-logo {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-family: 'Syne', sans-serif;
+            font-weight: 700;
+            font-size: 16px;
+            color: var(--text);
+            text-decoration: none
+        }
+
+        .logo-mark {
+            width: 28px;
+            height: 28px;
+            background: linear-gradient(135deg, #c8a96e, #7c6bde);
+            border-radius: 7px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+            font-weight: 800;
+            color: #fff
+        }
+
+        .back-btn {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            padding: 6px 12px;
+            background: transparent;
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            color: var(--muted);
+            font-size: 13px;
+            cursor: pointer;
+            text-decoration: none;
+            font-family: 'DM Sans', sans-serif;
+            transition: all .2s
+        }
+
+        .back-btn:hover {
+            border-color: rgba(200, 169, 110, 0.4);
+            color: var(--text)
+        }
+
+        .credits-pill {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            padding: 5px 12px;
+            background: rgba(200, 169, 110, 0.08);
+            border: 1px solid rgba(200, 169, 110, 0.2);
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 500;
+            color: var(--accent)
+        }
+
+        main {
+            position: relative;
+            z-index: 1;
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 48px 32px 80px
+        }
+
+        .tool-header {
+            margin-bottom: 40px
+        }
+
+        .tool-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 4px 12px;
+            background: rgba(124, 107, 222, 0.1);
+            border: 1px solid rgba(124, 107, 222, 0.2);
+            border-radius: 20px;
+            font-size: 11px;
+            font-weight: 600;
+            color: #a89ce0;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 14px
+        }
+
+        .tool-header h1 {
+            font-family: 'Syne', sans-serif;
+            font-size: 34px;
+            font-weight: 800;
+            letter-spacing: -1px;
+            margin-bottom: 8px
+        }
+
+        .tool-header p {
+            color: var(--muted);
+            font-size: 15px;
+            line-height: 1.65
+        }
+
+        .cost-row {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-top: 14px
+        }
+
+        .cost-badge {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            padding: 4px 10px;
+            background: rgba(200, 169, 110, 0.1);
+            border: 1px solid rgba(200, 169, 110, 0.2);
+            border-radius: 5px;
+            font-size: 12px;
+            color: var(--accent);
+            font-weight: 500
+        }
+
+        .card {
+            background: var(--bg2);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 28px;
+            margin-bottom: 20px
+        }
+
+        .card h3 {
+            font-family: 'Syne', sans-serif;
+            font-size: 14px;
+            font-weight: 600;
+            margin-bottom: 16px
+        }
+
+        .field {
+            margin-bottom: 16px
+        }
+
+        .field label {
+            font-size: 11px;
+            font-weight: 600;
+            color: var(--muted);
+            text-transform: uppercase;
+            letter-spacing: .6px;
+            display: block;
+            margin-bottom: 6px
+        }
+
+        select,
+        input[type=text] {
+            width: 100%;
+            padding: 10px 12px;
+            background: var(--bg3);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            color: var(--text);
+            font-size: 14px;
+            font-family: 'DM Sans', sans-serif;
+            outline: none;
+            transition: border-color .2s;
+            appearance: none
+        }
+
+        select:focus,
+        input:focus {
+            border-color: rgba(200, 169, 110, 0.4)
+        }
+
+        textarea {
+            width: 100%;
+            min-height: 140px;
+            padding: 14px;
+            background: var(--bg3);
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            color: var(--text);
+            font-family: 'DM Sans', sans-serif;
+            font-size: 15px;
+            resize: vertical;
+            outline: none;
+            line-height: 1.6;
+            transition: border-color .2s
+        }
+
+        textarea:focus {
+            border-color: rgba(200, 169, 110, 0.4)
+        }
+
+        .char-count {
+            text-align: right;
+            font-size: 11px;
+            color: var(--dim);
+            margin-top: 6px
+        }
+
+        .avatar-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+            gap: 10px;
+            margin-top: 12px
+        }
+
+        .avatar-card {
+            border: 2px solid var(--border);
+            border-radius: 10px;
+            overflow: hidden;
+            cursor: pointer;
+            transition: all .2s;
+            position: relative
+        }
+
+        .avatar-card:hover {
+            border-color: rgba(255, 255, 255, 0.2)
+        }
+
+        .avatar-card.selected {
+            border-color: var(--accent)
+        }
+
+        .avatar-card img {
+            width: 100%;
+            aspect-ratio: 1;
+            object-fit: cover;
+            display: block
+        }
+
+        .avatar-name {
+            padding: 6px;
+            font-size: 10px;
+            text-align: center;
+            color: var(--muted);
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap
+        }
+
+        .avatar-check {
+            position: absolute;
+            top: 6px;
+            right: 6px;
+            width: 18px;
+            height: 18px;
+            border-radius: 50%;
+            background: var(--accent);
+            display: none;
+            align-items: center;
+            justify-content: center
+        }
+
+        .avatar-card.selected .avatar-check {
+            display: flex
+        }
+
+        .loading-avatars {
+            text-align: center;
+            padding: 24px;
+            color: var(--dim);
+            font-size: 13px
+        }
+
+        .voice-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 8px;
+            margin-top: 12px
+        }
+
+        @media(max-width:540px) {
+            .voice-grid {
+                grid-template-columns: 1fr
+            }
+        }
+
+        .voice-chip {
+            padding: 10px 14px;
+            background: var(--bg3);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all .2s;
+            display: flex;
+            align-items: center;
+            gap: 8px
+        }
+
+        .voice-chip:hover {
+            border-color: rgba(255, 255, 255, 0.15)
+        }
+
+        .voice-chip.selected {
+            border-color: var(--accent);
+            background: rgba(200, 169, 110, 0.08)
+        }
+
+        .voice-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: var(--muted);
+            flex-shrink: 0;
+            transition: background .2s
+        }
+
+        .voice-chip.selected .voice-dot {
+            background: var(--accent)
+        }
+
+        .voice-info h4 {
+            font-size: 13px;
+            font-weight: 500;
+            margin-bottom: 1px
+        }
+
+        .voice-info p {
+            font-size: 11px;
+            color: var(--dim)
+        }
+
+        .btn-generate {
+            width: 100%;
+            padding: 16px;
+            background: linear-gradient(135deg, #c8a96e, #b8944a);
+            border: none;
+            border-radius: 10px;
+            color: #0a0807;
+            font-size: 15px;
+            font-weight: 700;
+            font-family: 'Syne', sans-serif;
+            cursor: pointer;
+            transition: all .2s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px
+        }
+
+        .btn-generate:hover:not(:disabled) {
+            transform: translateY(-1px);
+            box-shadow: 0 8px 28px rgba(200, 169, 110, 0.3)
+        }
+
+        .btn-generate:disabled {
+            opacity: .4;
+            cursor: not-allowed;
+            transform: none
+        }
+
+        .btn-generate svg {
+            width: 18px;
+            height: 18px
+        }
+
+        .status-card {
+            display: none;
+            background: var(--bg2);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 32px;
+            text-align: center;
+            margin-bottom: 24px
+        }
+
+        .status-card.visible {
+            display: block
+        }
+
+        .spinner {
+            width: 56px;
+            height: 56px;
+            border: 3px solid var(--bg3);
+            border-top-color: var(--purple);
+            border-radius: 50%;
+            animation: spin .9s linear infinite;
+            margin: 0 auto 14px
+        }
+
+        @keyframes spin {
+            to {
+                transform: rotate(360deg)
+            }
+        }
+
+        .status-title {
+            font-family: 'Syne', sans-serif;
+            font-size: 16px;
+            font-weight: 600;
+            margin-bottom: 6px
+        }
+
+        .status-sub {
+            font-size: 13px;
+            color: var(--muted)
+        }
+
+        .result-card {
+            display: none;
+            background: var(--bg2);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            overflow: hidden;
+            margin-bottom: 24px
+        }
+
+        .result-card.visible {
+            display: block
+        }
+
+        video {
+            width: 100%;
+            max-height: 480px;
+            display: block;
+            background: #000
+        }
+
+        .result-actions {
+            display: flex;
+            gap: 10px;
+            padding: 16px
+        }
+
+        .btn-dl {
+            flex: 1;
+            padding: 11px;
+            background: rgba(62, 207, 142, 0.1);
+            border: 1px solid rgba(62, 207, 142, 0.3);
+            border-radius: 8px;
+            color: var(--green);
+            font-size: 13px;
+            font-weight: 600;
+            font-family: 'DM Sans', sans-serif;
+            cursor: pointer;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+            transition: all .2s
+        }
+
+        .btn-dl:hover {
+            background: rgba(62, 207, 142, 0.18)
+        }
+
+        .btn-dl svg {
+            width: 15px;
+            height: 15px
+        }
+
+        .btn-new {
+            flex: 1;
+            padding: 11px;
+            background: var(--bg3);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            color: var(--text);
+            font-size: 13px;
+            font-weight: 600;
+            font-family: 'DM Sans', sans-serif;
+            cursor: pointer;
+            transition: all .2s
+        }
+
+        .btn-new:hover {
+            border-color: rgba(200, 169, 110, 0.4)
+        }
+
+        .error-msg {
+            display: none;
+            background: rgba(240, 128, 128, 0.08);
+            border: 1px solid rgba(240, 128, 128, 0.2);
+            border-radius: 8px;
+            padding: 12px 16px;
+            font-size: 13px;
+            color: var(--error);
+            margin-bottom: 16px
+        }
+
+        .error-msg.visible {
+            display: block
+        }
+    </style>
+</head>
+
+<body>
+    <nav>
+        <div style="display:flex;align-items:center;gap:12px">
+            <a href="../index.html" class="back-btn"><svg width="14" height="14" viewBox="0 0 24 24" fill="none"
+                    stroke="currentColor" stroke-width="2">
+                    <path d="M19 12H5M12 5l-7 7 7 7" />
+                </svg>All Tools</a>
+            <a href="../index.html" class="nav-logo">
+                <div class="logo-mark">N</div>Godbody AI
+            </a>
+        </div>
+        <div class="credits-pill"><svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor">
+                <circle cx="12" cy="12" r="10" />
+            </svg><span id="creditCount">—</span> credits</div>
+    </nav>
+
+    <main>
+        <div class="tool-header">
+            <div class="tool-badge">Avatar Video</div>
+            <h1>Your script. AI's face.</h1>
+            <p>Pick a HeyGen avatar, select a voice, write your script — AI generates a polished talking-head video
+                ready for LinkedIn, YouTube, TikTok or any platform.</p>
+            <div class="cost-row">
+                <div class="cost-badge"><svg width="11" height="11" viewBox="0 0 24 24" fill="currentColor">
+                        <circle cx="12" cy="12" r="10" />
+                    </svg>10 credits per generation</div>
+            </div>
+        </div>
+
+        <div class="error-msg" id="errorMsg"></div>
+
+        <!-- Step 1: Avatar -->
+        <div class="card">
+            <h3>1. Choose an Avatar</h3>
+            <div class="avatar-grid" id="avatarGrid">
+                <div class="loading-avatars">Loading avatars...</div>
+            </div>
+        </div>
+
+        <!-- Step 2: Voice -->
+        <div class="card">
+            <h3>2. Choose a Voice</h3>
+            <div class="voice-grid" id="voiceGrid">
+                <div class="loading-avatars" style="grid-column:1/-1">Loading voices...</div>
+            </div>
+        </div>
+
+        <!-- Step 3: Script -->
+        <div class="card">
+            <h3>3. Write Your Script</h3>
+            <textarea id="scriptInput"
+                placeholder="Hi, I'm your AI presenter. Welcome to our channel — today we're going to explore..."></textarea>
+            <div class="char-count"><span id="charCount">0</span> / 3000 characters</div>
+            <div class="field" style="margin-top:16px;margin-bottom:0">
+                <label>Background</label>
+                <input type="text" id="bgInput" placeholder="Optional: enter an image URL for the background" />
+            </div>
+        </div>
+
+        <button class="btn-generate" id="generateBtn" disabled>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2" />
+            </svg>
+            Generate Video — 10 Credits
+        </button>
+
+        <div style="height:24px"></div>
+
+        <div class="status-card" id="statusCard">
+            <div class="spinner"></div>
+            <div class="status-title">Creating your video...</div>
+            <div class="status-sub">HeyGen is rendering. This takes 1–3 minutes.</div>
+        </div>
+
+        <div class="result-card" id="resultCard">
+            <video id="resultVideo" controls></video>
+            <div class="result-actions">
+                <a class="btn-dl" id="downloadBtn" href="#" download="GODBODY-avatar-video.mp4">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4M7 10l5 5 5-5M12 15V3" />
+                    </svg>
+                    Download
+                </a>
+                <button class="btn-new" id="newBtn">New Video</button>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        const BACKEND = 'http://localhost:3001';
+        const USER_ID = 'demo-user';
+        let selectedAvatarId = null, selectedVoiceId = null;
+
+        function showError(msg) { const e = document.getElementById('errorMsg'); e.textContent = msg; e.classList.add('visible'); setTimeout(() => e.classList.remove('visible'), 7000); }
+        function checkReady() { document.getElementById('generateBtn').disabled = !(selectedAvatarId && selectedVoiceId && document.getElementById('scriptInput').value.length > 10); }
+
+        document.getElementById('scriptInput').addEventListener('input', () => {
+            const len = document.getElementById('scriptInput').value.length;
+            document.getElementById('charCount').textContent = len;
+            checkReady();
+        });
+
+        // Load avatars
+        async function loadAvatars() {
+            try {
+                const r = await fetch(`${BACKEND}/api/generate/avatars`, { headers: { 'x-user-id': USER_ID } });
+                const d = await r.json();
+                const avatars = d.avatars?.slice(0, 16) || [];
+                if (!avatars.length) { document.getElementById('avatarGrid').innerHTML = '<div class="loading-avatars">No avatars found. Check your HeyGen API key.</div>'; return; }
+                document.getElementById('avatarGrid').innerHTML = avatars.map(a => `
+      <div class="avatar-card" data-id="${a.avatar_id}" onclick="selectAvatar('${a.avatar_id}', this)">
+        <img src="${a.preview_image_url || ''}" alt="${a.avatar_name}" onerror="this.style.height='80px';this.style.background='#131720'" />
+        <div class="avatar-name">${a.avatar_name || a.avatar_id}</div>
+        <div class="avatar-check"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="#0a0807" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg></div>
+      </div>`).join('');
+            } catch (e) {
+                document.getElementById('avatarGrid').innerHTML = '<div class="loading-avatars">Could not load avatars. Is the server running?</div>';
+            }
+        }
+
+        function selectAvatar(id, el) {
+            selectedAvatarId = id;
+            document.querySelectorAll('.avatar-card').forEach(c => c.classList.remove('selected'));
+            el.classList.add('selected');
+            checkReady();
+        }
+
+        // Load voices
+        const BUILTIN_VOICES = [
+            { voice_id: '2EiwWnXFnvU5JabPnv8n', name: 'Clyde', gender: 'Male', accent: 'American' },
+            { voice_id: 'D38z5RcWu1voky8WS1ja', name: 'Fin', gender: 'Male', accent: 'Irish' },
+            { voice_id: 'EXAVITQu4vr4xnSDxMaL', name: 'Bella', gender: 'Female', accent: 'American' },
+            { voice_id: 'MF3mGyEYCl7XYWbV9V6O', name: 'Elli', gender: 'Female', accent: 'American' },
+            { voice_id: 'N2lVS1w4EtoT3dr4eOWO', name: 'Callum', gender: 'Male', accent: 'Transatlantic' },
+            { voice_id: 'TxGEqnHWrfWFTfGW9XjX', name: 'Josh', gender: 'Male', accent: 'American' },
+            { voice_id: 'VR6AewLTigWG4xSOukaG', name: 'Arnold', gender: 'Male', accent: 'American' },
+            { voice_id: 'pNInz6obpgDQGcFmaJgB', name: 'Adam', gender: 'Male', accent: 'American' },
+        ];
+
+        async function loadVoices() {
+            try {
+                const r = await fetch(`${BACKEND}/api/generate/voices`, { headers: { 'x-user-id': USER_ID } });
+                const d = await r.json();
+                const voices = (d.voices || BUILTIN_VOICES).slice(0, 8);
+                renderVoices(voices);
+            } catch { renderVoices(BUILTIN_VOICES); }
+        }
+
+        function renderVoices(voices) {
+            document.getElementById('voiceGrid').innerHTML = voices.map(v => `
+    <div class="voice-chip" data-id="${v.voice_id || v.id}" onclick="selectVoice('${v.voice_id || v.id}', this)">
+      <div class="voice-dot"></div>
+      <div class="voice-info">
+        <h4>${v.name}</h4>
+        <p>${v.gender || ''}${v.accent ? ' · ' + v.accent : ''}</p>
+      </div>
+    </div>`).join('');
+        }
+
+        function selectVoice(id, el) {
+            selectedVoiceId = id;
+            document.querySelectorAll('.voice-chip').forEach(c => c.classList.remove('selected'));
+            el.classList.add('selected');
+            checkReady();
+        }
+
+        document.getElementById('generateBtn').addEventListener('click', async () => {
+            const script = document.getElementById('scriptInput').value.trim();
+            const bgUrl = document.getElementById('bgInput').value.trim() || undefined;
+            if (!script || !selectedAvatarId || !selectedVoiceId) return;
+
+            document.getElementById('errorMsg').classList.remove('visible');
+            document.getElementById('statusCard').classList.add('visible');
+            document.getElementById('generateBtn').disabled = true;
+
+            try {
+                const res = await fetch(`${BACKEND}/api/generate/avatar-video`, { method: 'POST', headers: { 'Content-Type': 'application/json', 'x-user-id': USER_ID }, body: JSON.stringify({ avatarId: selectedAvatarId, voiceId: selectedVoiceId, script, backgroundUrl: bgUrl }) });
+                const data = await res.json();
+                if (!res.ok) throw new Error(data.error || 'Generation failed.');
+
+                const result = await pollJob(data.jobId);
+                document.getElementById('statusCard').classList.remove('visible');
+                document.getElementById('resultVideo').src = result.outputUrl;
+                document.getElementById('downloadBtn').href = result.outputUrl;
+                document.getElementById('resultCard').classList.add('visible');
+            } catch (err) {
+                document.getElementById('statusCard').classList.remove('visible');
+                showError(err.message);
+                document.getElementById('generateBtn').disabled = false;
+            }
+        });
+
+        async function pollJob(jobId) {
+            return new Promise((resolve, reject) => {
+                const interval = setInterval(async () => {
+                    try {
+                        const r = await fetch(`${BACKEND}/api/jobs/${jobId}`, { headers: { 'x-user-id': USER_ID } });
+                        const j = await r.json();
+                        if (j.status === 'completed') { clearInterval(interval); resolve(j); }
+                        else if (j.status === 'failed') { clearInterval(interval); reject(new Error(j.error || 'Failed.')); }
+                    } catch (e) { clearInterval(interval); reject(e); }
+                }, 6000);
+            });
+        }
+
+        document.getElementById('newBtn').addEventListener('click', () => {
+            selectedAvatarId = null; selectedVoiceId = null;
+            document.querySelectorAll('.avatar-card').forEach(c => c.classList.remove('selected'));
+            document.querySelectorAll('.voice-chip').forEach(c => c.classList.remove('selected'));
+            document.getElementById('scriptInput').value = '';
+            document.getElementById('charCount').textContent = '0';
+            document.getElementById('resultCard').classList.remove('visible');
+            document.getElementById('generateBtn').disabled = true;
+        });
+
+        async function loadCredits() {
+            try { const r = await fetch(`${BACKEND}/api/jobs/credits/balance`, { headers: { 'x-user-id': USER_ID } }); const d = await r.json(); document.getElementById('creditCount').textContent = d.credits?.toLocaleString() || '—'; } catch { }
+        }
+
+        loadAvatars();
+        loadVoices();
+        loadCredits();
+    </script>
+</body>
+
+</html>

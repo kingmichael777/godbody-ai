@@ -1,0 +1,2333 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Godbody AI — Create</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link
+    href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;1,9..40,300&display=swap"
+    rel="stylesheet">
+  <style>
+    *,
+    *::before,
+    *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    :root {
+      --bg: #080a0f;
+      --bg2: #0e1118;
+      --bg3: #131720;
+      --border: rgba(255, 255, 255, 0.07);
+      --border-hover: rgba(255, 255, 255, 0.18);
+      --text: #f0f2f7;
+      --text-muted: #8b90a0;
+      --text-dim: #4a5060;
+      --accent: #c8a96e;
+      --accent2: #7c6bde;
+      --accent3: #3ecf8e;
+      --glow: rgba(200, 169, 110, 0.15);
+      --card-bg: rgba(14, 17, 24, 0.8);
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'DM Sans', sans-serif;
+      font-size: 15px;
+      line-height: 1.6;
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    /* Background texture */
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background:
+        radial-gradient(ellipse 80% 50% at 50% -10%, rgba(124, 107, 222, 0.12) 0%, transparent 60%),
+        radial-gradient(ellipse 60% 40% at 90% 60%, rgba(200, 169, 110, 0.06) 0%, transparent 50%);
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    /* Noise overlay */
+    body::after {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.03'/%3E%3C/svg%3E");
+      pointer-events: none;
+      z-index: 0;
+      opacity: 0.4;
+    }
+
+    /* NAV */
+    nav {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 32px;
+      height: 64px;
+      background: rgba(8, 10, 15, 0.85);
+      backdrop-filter: blur(20px);
+      border-bottom: 1px solid var(--border);
+    }
+
+    .nav-logo {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      text-decoration: none;
+    }
+
+    .logo-mark {
+      width: 32px;
+      height: 32px;
+      background: linear-gradient(135deg, #c8a96e, #7c6bde);
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: 'Syne', sans-serif;
+      font-weight: 800;
+      font-size: 14px;
+      color: #fff;
+      letter-spacing: -0.5px;
+    }
+
+    .logo-text {
+      font-family: 'Syne', sans-serif;
+      font-weight: 700;
+      font-size: 18px;
+      color: var(--text);
+      letter-spacing: -0.3px;
+    }
+
+    .logo-text span {
+      color: var(--accent);
+    }
+
+    .nav-center {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      background: rgba(255, 255, 255, 0.04);
+      border: 1px solid var(--border);
+      border-radius: 24px;
+      padding: 4px;
+    }
+
+    .nav-tab {
+      padding: 6px 18px;
+      border-radius: 20px;
+      font-size: 13px;
+      font-weight: 500;
+      color: var(--text-muted);
+      cursor: pointer;
+      transition: all 0.2s;
+      white-space: nowrap;
+      border: none;
+      background: none;
+      font-family: 'DM Sans', sans-serif;
+    }
+
+    .nav-tab.active {
+      background: var(--bg3);
+      color: var(--text);
+      border: 1px solid var(--border-hover);
+    }
+
+    .nav-tab:hover:not(.active) {
+      color: var(--text);
+    }
+
+    .nav-right {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .credits-badge {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      padding: 6px 14px;
+      background: rgba(200, 169, 110, 0.1);
+      border: 1px solid rgba(200, 169, 110, 0.2);
+      border-radius: 20px;
+      font-size: 12px;
+      font-weight: 500;
+      color: var(--accent);
+    }
+
+    .credits-badge svg {
+      width: 14px;
+      height: 14px;
+    }
+
+    .btn-primary {
+      padding: 8px 20px;
+      background: linear-gradient(135deg, #c8a96e, #b8944a);
+      border: none;
+      border-radius: 8px;
+      color: #0a0807;
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+      font-family: 'DM Sans', sans-serif;
+      transition: all 0.2s;
+      letter-spacing: 0.2px;
+    }
+
+    .btn-primary:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 4px 20px rgba(200, 169, 110, 0.3);
+    }
+
+    /* MAIN */
+    main {
+      position: relative;
+      z-index: 1;
+      max-width: 1280px;
+      margin: 0 auto;
+      padding: 48px 32px 80px;
+    }
+
+    /* HERO */
+    .hero {
+      margin-bottom: 48px;
+    }
+
+    .hero-eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 4px 12px;
+      background: rgba(124, 107, 222, 0.1);
+      border: 1px solid rgba(124, 107, 222, 0.2);
+      border-radius: 20px;
+      font-size: 11px;
+      font-weight: 600;
+      color: #a89ce0;
+      text-transform: uppercase;
+      letter-spacing: 1.2px;
+      margin-bottom: 20px;
+    }
+
+    .pulse {
+      width: 6px;
+      height: 6px;
+      background: #7c6bde;
+      border-radius: 50%;
+      animation: pulse 2s ease-in-out infinite;
+    }
+
+    @keyframes pulse {
+
+      0%,
+      100% {
+        opacity: 1;
+        transform: scale(1);
+      }
+
+      50% {
+        opacity: 0.5;
+        transform: scale(0.7);
+      }
+    }
+
+    .hero h1 {
+      font-family: 'Syne', sans-serif;
+      font-size: 42px;
+      font-weight: 800;
+      line-height: 1.1;
+      letter-spacing: -1.5px;
+      color: var(--text);
+      margin-bottom: 14px;
+      max-width: 640px;
+    }
+
+    .hero h1 .gradient-text {
+      background: linear-gradient(120deg, #c8a96e 0%, #e8c88e 40%, #7c6bde 80%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .hero-sub {
+      color: var(--text-muted);
+      font-size: 16px;
+      max-width: 480px;
+      line-height: 1.7;
+    }
+
+    /* STATS ROW */
+    .stats-row {
+      display: flex;
+      align-items: center;
+      gap: 32px;
+      margin-top: 32px;
+    }
+
+    .stat {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+    }
+
+    .stat-num {
+      font-family: 'Syne', sans-serif;
+      font-size: 20px;
+      font-weight: 700;
+      color: var(--text);
+      letter-spacing: -0.5px;
+    }
+
+    .stat-label {
+      font-size: 11px;
+      color: var(--text-dim);
+      text-transform: uppercase;
+      letter-spacing: 0.8px;
+    }
+
+    .stat-divider {
+      width: 1px;
+      height: 36px;
+      background: var(--border);
+    }
+
+    /* FILTER BAR */
+    .filter-bar {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 32px;
+      flex-wrap: wrap;
+    }
+
+    .filter-label {
+      font-size: 12px;
+      color: var(--text-dim);
+      text-transform: uppercase;
+      letter-spacing: 0.8px;
+      margin-right: 4px;
+    }
+
+    .filter-chip {
+      padding: 6px 16px;
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      background: transparent;
+      color: var(--text-muted);
+      font-size: 13px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.18s;
+      font-family: 'DM Sans', sans-serif;
+      white-space: nowrap;
+    }
+
+    .filter-chip.active {
+      background: rgba(200, 169, 110, 0.12);
+      border-color: rgba(200, 169, 110, 0.35);
+      color: var(--accent);
+    }
+
+    .filter-chip:hover:not(.active) {
+      border-color: var(--border-hover);
+      color: var(--text);
+      background: rgba(255, 255, 255, 0.03);
+    }
+
+    /* FEATURED TOOL */
+    .featured-tool {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 0;
+      background: var(--bg2);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      overflow: hidden;
+      margin-bottom: 32px;
+      transition: border-color 0.2s;
+      cursor: pointer;
+      position: relative;
+    }
+
+    .featured-tool::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(135deg, rgba(124, 107, 222, 0.04), transparent);
+      pointer-events: none;
+    }
+
+    .featured-tool:hover {
+      border-color: var(--border-hover);
+    }
+
+    .featured-visual {
+      position: relative;
+      height: 260px;
+      background: linear-gradient(135deg, #0d1020 0%, #141830 50%, #0a0d18 100%);
+      overflow: hidden;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .featured-visual .visual-inner {
+      width: 180px;
+      height: 180px;
+      border-radius: 50%;
+      position: relative;
+    }
+
+    /* Animated rings */
+    .ring {
+      position: absolute;
+      border-radius: 50%;
+      border: 1px solid;
+      inset: 0;
+      animation: ringPulse 3s ease-in-out infinite;
+    }
+
+    .ring:nth-child(1) {
+      border-color: rgba(124, 107, 222, 0.5);
+      animation-delay: 0s;
+    }
+
+    .ring:nth-child(2) {
+      inset: -20px;
+      border-color: rgba(124, 107, 222, 0.3);
+      animation-delay: 0.5s;
+    }
+
+    .ring:nth-child(3) {
+      inset: -40px;
+      border-color: rgba(124, 107, 222, 0.15);
+      animation-delay: 1s;
+    }
+
+    @keyframes ringPulse {
+
+      0%,
+      100% {
+        transform: scale(1);
+        opacity: 1;
+      }
+
+      50% {
+        transform: scale(1.05);
+        opacity: 0.6;
+      }
+    }
+
+    .ring-center {
+      position: absolute;
+      inset: 20px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #7c6bde, #4a3daa);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 0 40px rgba(124, 107, 222, 0.4);
+    }
+
+    .ring-center svg {
+      width: 40px;
+      height: 40px;
+      color: white;
+    }
+
+    .featured-content {
+      padding: 36px 40px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
+
+    .tag-new {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      padding: 3px 10px;
+      background: rgba(62, 207, 142, 0.1);
+      border: 1px solid rgba(62, 207, 142, 0.25);
+      border-radius: 4px;
+      font-size: 10px;
+      font-weight: 700;
+      color: var(--accent3);
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      margin-bottom: 14px;
+      width: fit-content;
+    }
+
+    .featured-content h2 {
+      font-family: 'Syne', sans-serif;
+      font-size: 26px;
+      font-weight: 700;
+      letter-spacing: -0.5px;
+      margin-bottom: 10px;
+      line-height: 1.2;
+    }
+
+    .featured-content p {
+      color: var(--text-muted);
+      font-size: 14px;
+      line-height: 1.7;
+      margin-bottom: 24px;
+    }
+
+    .btn-featured {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 11px 22px;
+      background: linear-gradient(135deg, #7c6bde, #5c4dbe);
+      border: none;
+      border-radius: 8px;
+      color: #fff;
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+      font-family: 'DM Sans', sans-serif;
+      transition: all 0.2s;
+      width: fit-content;
+    }
+
+    .btn-featured:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 6px 24px rgba(124, 107, 222, 0.4);
+    }
+
+    .btn-featured svg {
+      width: 16px;
+      height: 16px;
+    }
+
+    /* SECTION LABEL */
+    .section-label {
+      font-family: 'Syne', sans-serif;
+      font-size: 11px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 2px;
+      color: var(--text-dim);
+      margin-bottom: 20px;
+    }
+
+    /* TOOLS GRID */
+    .tools-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+      gap: 16px;
+      margin-bottom: 40px;
+    }
+
+    .tool-card {
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      overflow: hidden;
+      cursor: pointer;
+      transition: all 0.22s cubic-bezier(0.4, 0, 0.2, 1);
+      position: relative;
+      backdrop-filter: blur(10px);
+      animation: cardIn 0.4s ease-out both;
+    }
+
+    @keyframes cardIn {
+      from {
+        opacity: 0;
+        transform: translateY(12px);
+      }
+
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .tool-card:hover {
+      border-color: var(--border-hover);
+      transform: translateY(-3px);
+      box-shadow: 0 12px 40px rgba(0, 0, 0, 0.4);
+    }
+
+    .tool-card:hover .card-arrow {
+      opacity: 1;
+      transform: translateX(0);
+    }
+
+    .tool-card:hover .card-thumb-overlay {
+      opacity: 1;
+    }
+
+    .card-thumb {
+      height: 148px;
+      position: relative;
+      overflow: hidden;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .card-thumb-overlay {
+      position: absolute;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.2);
+      opacity: 0;
+      transition: opacity 0.2s;
+    }
+
+    .card-icon-wrap {
+      width: 56px;
+      height: 56px;
+      border-radius: 14px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+      z-index: 1;
+    }
+
+    .card-icon-wrap svg {
+      width: 26px;
+      height: 26px;
+    }
+
+    .card-body {
+      padding: 16px;
+    }
+
+    .card-top {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      margin-bottom: 6px;
+    }
+
+    .card-title {
+      font-family: 'Syne', sans-serif;
+      font-size: 15px;
+      font-weight: 600;
+      letter-spacing: -0.2px;
+      color: var(--text);
+      line-height: 1.3;
+    }
+
+    .card-arrow {
+      width: 20px;
+      height: 20px;
+      color: var(--text-muted);
+      opacity: 0;
+      transform: translateX(-4px);
+      transition: all 0.2s;
+      flex-shrink: 0;
+      margin-top: 2px;
+    }
+
+    .card-desc {
+      font-size: 13px;
+      color: var(--text-muted);
+      line-height: 1.5;
+      margin-bottom: 12px;
+    }
+
+    .card-footer {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .card-credit {
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      font-size: 11px;
+      color: var(--text-dim);
+      font-weight: 500;
+    }
+
+    .card-credit svg {
+      width: 12px;
+      height: 12px;
+    }
+
+    .card-tag {
+      font-size: 10px;
+      font-weight: 600;
+      padding: 2px 8px;
+      border-radius: 4px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .tag-video {
+      background: rgba(124, 107, 222, 0.12);
+      color: #a89ce0;
+    }
+
+    .tag-image {
+      background: rgba(200, 169, 110, 0.12);
+      color: var(--accent);
+    }
+
+    .tag-audio {
+      background: rgba(62, 207, 142, 0.12);
+      color: var(--accent3);
+    }
+
+    .tag-new-badge {
+      background: rgba(239, 100, 100, 0.12);
+      color: #f08080;
+    }
+
+    /* BACKGROUNDS FOR CARDS */
+    .bg-purple {
+      background: linear-gradient(135deg, #1a1530 0%, #12102a 100%);
+    }
+
+    .bg-gold {
+      background: linear-gradient(135deg, #1e1910 0%, #181400 100%);
+    }
+
+    .bg-green {
+      background: linear-gradient(135deg, #0d1f17 0%, #081510 100%);
+    }
+
+    .bg-red {
+      background: linear-gradient(135deg, #1f0d0d 0%, #180808 100%);
+    }
+
+    .bg-blue {
+      background: linear-gradient(135deg, #0d1520 0%, #080f18 100%);
+    }
+
+    .bg-pink {
+      background: linear-gradient(135deg, #1f0d18 0%, #180810 100%);
+    }
+
+    .icon-purple {
+      background: rgba(124, 107, 222, 0.15);
+      color: #a89ce0;
+    }
+
+    .icon-gold {
+      background: rgba(200, 169, 110, 0.15);
+      color: var(--accent);
+    }
+
+    .icon-green {
+      background: rgba(62, 207, 142, 0.15);
+      color: var(--accent3);
+    }
+
+    .icon-red {
+      background: rgba(239, 100, 100, 0.15);
+      color: #f08080;
+    }
+
+    .icon-blue {
+      background: rgba(80, 160, 240, 0.15);
+      color: #80c0f0;
+    }
+
+    .icon-pink {
+      background: rgba(220, 100, 180, 0.15);
+      color: #e090d0;
+    }
+
+    /* SECTION DIVIDER */
+    .section-divider {
+      height: 1px;
+      background: var(--border);
+      margin: 40px 0;
+    }
+
+    /* RECENT SECTION */
+    .recent-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+      gap: 12px;
+      margin-bottom: 40px;
+    }
+
+    .recent-card {
+      border-radius: 10px;
+      overflow: hidden;
+      aspect-ratio: 9/16;
+      background: var(--bg3);
+      border: 1px solid var(--border);
+      cursor: pointer;
+      transition: all 0.2s;
+      position: relative;
+      display: flex;
+      align-items: flex-end;
+    }
+
+    .recent-card:hover {
+      transform: scale(1.02);
+      border-color: var(--border-hover);
+    }
+
+    .recent-card-bg {
+      position: absolute;
+      inset: 0;
+    }
+
+    .recent-card-info {
+      position: relative;
+      z-index: 1;
+      padding: 12px;
+      background: linear-gradient(transparent, rgba(0, 0, 0, 0.8));
+      width: 100%;
+    }
+
+    .recent-tool-name {
+      font-size: 11px;
+      color: rgba(255, 255, 255, 0.7);
+      margin-bottom: 2px;
+    }
+
+    .recent-time {
+      font-size: 10px;
+      color: rgba(255, 255, 255, 0.4);
+    }
+
+    /* CTA BANNER */
+    .cta-banner {
+      background: linear-gradient(135deg, rgba(124, 107, 222, 0.1) 0%, rgba(200, 169, 110, 0.06) 100%);
+      border: 1px solid rgba(124, 107, 222, 0.2);
+      border-radius: 16px;
+      padding: 40px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 24px;
+    }
+
+    .cta-text h3 {
+      font-family: 'Syne', sans-serif;
+      font-size: 22px;
+      font-weight: 700;
+      letter-spacing: -0.4px;
+      margin-bottom: 6px;
+    }
+
+    .cta-text p {
+      color: var(--text-muted);
+      font-size: 14px;
+    }
+
+    .cta-actions {
+      display: flex;
+      gap: 12px;
+      flex-shrink: 0;
+    }
+
+    .btn-secondary {
+      padding: 10px 20px;
+      border: 1px solid var(--border-hover);
+      border-radius: 8px;
+      background: transparent;
+      color: var(--text);
+      font-size: 13px;
+      font-weight: 500;
+      cursor: pointer;
+      font-family: 'DM Sans', sans-serif;
+      transition: all 0.2s;
+    }
+
+    .btn-secondary:hover {
+      background: rgba(255, 255, 255, 0.05);
+    }
+
+    /* SCROLLBAR */
+    ::-webkit-scrollbar {
+      width: 6px;
+    }
+
+    ::-webkit-scrollbar-track {
+      background: transparent;
+    }
+
+    ::-webkit-scrollbar-thumb {
+      background: var(--bg3);
+      border-radius: 3px;
+    }
+
+    /* RESPONSIVE */
+    @media (max-width: 900px) {
+      .featured-tool {
+        grid-template-columns: 1fr;
+      }
+
+      .featured-visual {
+        height: 180px;
+      }
+
+      .hero h1 {
+        font-size: 30px;
+      }
+
+      nav {
+        padding: 0 16px;
+      }
+
+      .nav-center {
+        display: none;
+      }
+
+      main {
+        padding: 32px 16px 60px;
+      }
+    }
+
+    @media (max-width: 600px) {
+      .stats-row {
+        gap: 20px;
+      }
+
+      .tools-grid {
+        grid-template-columns: 1fr 1fr;
+        gap: 12px;
+      }
+
+      .cta-banner {
+        flex-direction: column;
+      }
+
+      .cta-actions {
+        width: 100%;
+      }
+
+      .btn-primary,
+      .btn-secondary {
+        flex: 1;
+        text-align: center;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <!-- NAV -->
+  <nav>
+    <a href="#" class="nav-logo">
+      <div class="logo-mark">N</div>
+      <span class="logo-text">GODBODY<span>AI</span></span>
+    </a>
+
+    <div class="nav-center">
+      <button class="nav-tab active">Create</button>
+      <button class="nav-tab">My Generations</button>
+      <button class="nav-tab">Templates</button>
+      <button class="nav-tab">Community</button>
+    </div>
+
+    <div class="nav-right">
+      <!-- Admin badge (shown when logged in as owner) -->
+      <div id="adminBadge"
+        style="display:none;align-items:center;gap:6px;padding:5px 12px;background:rgba(200,169,110,0.12);border:1px solid rgba(200,169,110,0.3);border-radius:20px;font-size:11px;font-weight:700;color:#c8a96e;letter-spacing:.5px">
+        ⚡ OWNER
+      </div>
+      <div class="credits-badge" id="creditsBadge" onclick="window.location.href='credits.html'" style="cursor:pointer">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <circle cx="12" cy="12" r="10" />
+          <path d="M12 6v6l4 2" />
+        </svg>
+        <span id="navCredits">—</span> credits
+      </div>
+      <button class="btn-primary" id="navActionBtn" onclick="window.location.href='credits.html'">Upgrade Plan</button>
+    </div>
+  </nav>
+
+  <!-- MAIN -->
+  <main>
+
+    <!-- HERO -->
+    <div class="hero">
+      <div class="hero-eyebrow">
+        <div class="pulse"></div>
+        AI-Powered Creation
+      </div>
+      <h1>Turn your ideas into<br><span class="gradient-text">visual reality.</span></h1>
+      <p class="hero-sub">Choose any tool below. No technical skill required. Every generation takes seconds.</p>
+
+      <div class="stats-row">
+        <div class="stat">
+          <span class="stat-num">14.2M+</span>
+          <span class="stat-label">Visuals Generated</span>
+        </div>
+        <div class="stat-divider"></div>
+        <div class="stat">
+          <span class="stat-num">3.0M+</span>
+          <span class="stat-label">Happy Users</span>
+        </div>
+        <div class="stat-divider"></div>
+        <div class="stat">
+          <span class="stat-num">48</span>
+          <span class="stat-label">AI Tools</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- FILTER BAR -->
+    <div class="filter-bar">
+      <span class="filter-label">Filter:</span>
+      <button class="filter-chip active" onclick="filterTools('all', this)">All Tools</button>
+      <button class="filter-chip" onclick="filterTools('video', this)">Video</button>
+      <button class="filter-chip" onclick="filterTools('image', this)">Image</button>
+      <button class="filter-chip" onclick="filterTools('audio', this)">Audio</button>
+      <button class="filter-chip" onclick="filterTools('new', this)">New</button>
+    </div>
+
+    <!-- FEATURED TOOL -->
+    <div class="featured-tool" data-category="video new">
+      <div class="featured-visual">
+        <div class="visual-inner">
+          <div class="ring"></div>
+          <div class="ring"></div>
+          <div class="ring"></div>
+          <div class="ring-center">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+              <path
+                d="M15 10l4.553-2.069A1 1 0 0121 8.87v6.26a1 1 0 01-1.447.894L15 14M3 8a2 2 0 012-2h8a2 2 0 012 2v8a2 2 0 01-2 2H5a2 2 0 01-2-2V8z" />
+            </svg>
+          </div>
+        </div>
+      </div>
+      <div class="featured-content">
+        <div class="tag-new">Featured</div>
+        <h2>AI Video Generator</h2>
+        <p>Type a prompt. Get a cinematic video in seconds. Generate talking avatars, product demos, explainer reels,
+          and story-driven content without a camera or crew.</p>
+        <button class="btn-featured" onclick="window.location.href='tools/avatar-video.html'">
+          Start Creating
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M5 12h14M12 5l7 7-7 7" />
+          </svg>
+        </button>
+      </div>
+    </div>
+
+    <!-- TOOLS GRID -->
+    <p class="section-label">All Tools</p>
+
+    <div class="tools-grid" id="toolsGrid">
+
+      <!-- Face Swap -->
+      <div class="tool-card" data-category="video image" data-tool="face_swap" data-replicate
+        style="animation-delay:0.04s" onclick="openModal('face_swap')">
+        <div class="card-thumb bg-gold">
+          <div class="card-icon-wrap icon-gold">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+              <circle cx="12" cy="8" r="4" />
+              <path d="M6 20v-1a6 6 0 0112 0v1" />
+              <path d="M16 8l2-2m0 0l2 2m-2-2v4" />
+            </svg>
+          </div>
+          <div class="card-thumb-overlay"></div>
+        </div>
+        <div class="card-body">
+          <div class="card-top">
+            <span class="card-title">Face Swap</span>
+            <svg class="card-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M5 12h14M12 5l7 7-7 7" />
+            </svg>
+          </div>
+          <p class="card-desc">Swap any face in a photo or video with hyper-realistic precision.</p>
+          <div class="card-footer">
+            <span class="card-credit">
+              <svg viewBox="0 0 24 24" fill="currentColor">
+                <circle cx="12" cy="12" r="10" />
+              </svg>
+              4 credits/gen
+            </span>
+            <span class="card-tag tag-image">Image</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- AI Headshots -->
+      <div class="tool-card" data-category="image new" data-tool="ai_headshots" data-replicate
+        style="animation-delay:0.08s" onclick="openModal('ai_headshots')">
+        <div class="card-thumb bg-purple">
+          <div class="card-icon-wrap icon-purple">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+              <rect x="3" y="3" width="18" height="18" rx="4" />
+              <circle cx="12" cy="10" r="3" />
+              <path d="M6 20.5a6 6 0 0112 0" />
+            </svg>
+          </div>
+          <div class="card-thumb-overlay"></div>
+        </div>
+        <div class="card-body">
+          <div class="card-top">
+            <span class="card-title">AI Headshots</span>
+            <svg class="card-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M5 12h14M12 5l7 7-7 7" />
+            </svg>
+          </div>
+          <p class="card-desc">Studio-quality professional headshots. No photographer needed.</p>
+          <div class="card-footer">
+            <span class="card-credit"><svg viewBox="0 0 24 24" fill="currentColor">
+                <circle cx="12" cy="12" r="10" />
+              </svg>8 credits/gen</span>
+            <span class="card-tag tag-new-badge">New</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Text to Image -->
+      <div class="tool-card" data-category="image" data-tool="text_to_image" data-replicate
+        style="animation-delay:0.12s" onclick="openModal('text_to_image')">
+        <div class="card-thumb bg-blue">
+          <div class="card-icon-wrap icon-blue">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+              <rect x="3" y="3" width="18" height="18" rx="2" />
+              <circle cx="8.5" cy="8.5" r="1.5" />
+              <path d="M21 15l-5-5L5 21" />
+            </svg>
+          </div>
+          <div class="card-thumb-overlay"></div>
+        </div>
+        <div class="card-body">
+          <div class="card-top">
+            <span class="card-title">Text to Image</span>
+            <svg class="card-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M5 12h14M12 5l7 7-7 7" />
+            </svg>
+          </div>
+          <p class="card-desc">Turn any prompt into a stunning image in seconds. Multiple styles available.</p>
+          <div class="card-footer">
+            <span class="card-credit"><svg viewBox="0 0 24 24" fill="currentColor">
+                <circle cx="12" cy="12" r="10" />
+              </svg>2 credits/gen</span>
+            <span class="card-tag tag-image">Image</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Video to Video -->
+      <div class="tool-card" data-category="video" data-tool="video_to_video" data-replicate
+        style="animation-delay:0.16s" onclick="openModal('video_to_video')">
+        <div class="card-thumb bg-purple">
+          <div class="card-icon-wrap icon-purple">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+              <path
+                d="M15 10l4.553-2.069A1 1 0 0121 8.87v6.26a1 1 0 01-1.447.894L15 14M3 8a2 2 0 012-2h8a2 2 0 012 2v8a2 2 0 01-2 2H5a2 2 0 01-2-2V8z" />
+            </svg>
+          </div>
+          <div class="card-thumb-overlay"></div>
+        </div>
+        <div class="card-body">
+          <div class="card-top">
+            <span class="card-title">Video to Video</span>
+            <svg class="card-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M5 12h14M12 5l7 7-7 7" />
+            </svg>
+          </div>
+          <p class="card-desc">Transform existing footage with new styles, environments, and effects.</p>
+          <div class="card-footer">
+            <span class="card-credit"><svg viewBox="0 0 24 24" fill="currentColor">
+                <circle cx="12" cy="12" r="10" />
+              </svg>12 credits/gen</span>
+            <span class="card-tag tag-video">Video</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Voice Clone -->
+      <div class="tool-card" data-category="audio new" data-tool="voice_clone" style="animation-delay:0.20s"
+        onclick="openModal('voice_clone')">
+        <div class="card-thumb bg-green">
+          <div class="card-icon-wrap icon-green">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+              <path d="M12 1a3 3 0 00-3 3v8a3 3 0 006 0V4a3 3 0 00-3-3z" />
+              <path d="M19 10v2a7 7 0 01-14 0v-2M12 19v4m-4 0h8" />
+            </svg>
+          </div>
+          <div class="card-thumb-overlay"></div>
+        </div>
+        <div class="card-body">
+          <div class="card-top">
+            <span class="card-title">Voice Clone</span>
+            <svg class="card-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M5 12h14M12 5l7 7-7 7" />
+            </svg>
+          </div>
+          <p class="card-desc">Clone any voice and generate speech in 30+ languages. Human-level realism.</p>
+          <div class="card-footer">
+            <span class="card-credit"><svg viewBox="0 0 24 24" fill="currentColor">
+                <circle cx="12" cy="12" r="10" />
+              </svg>5 credits/gen</span>
+            <span class="card-tag tag-audio">Audio</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Background Remover -->
+      <div class="tool-card" data-category="image" data-tool="background_remove" data-replicate
+        style="animation-delay:0.24s" onclick="openModal('background_remove')">
+        <div class="card-thumb bg-red">
+          <div class="card-icon-wrap icon-red">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+              <path d="M21 9l-9-7-9 7v11a2 2 0 002 2h14a2 2 0 002-2V9z" />
+              <polyline points="9 22 9 12 15 12 15 22" />
+            </svg>
+          </div>
+          <div class="card-thumb-overlay"></div>
+        </div>
+        <div class="card-body">
+          <div class="card-top">
+            <span class="card-title">Background Remove</span>
+            <svg class="card-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M5 12h14M12 5l7 7-7 7" />
+            </svg>
+          </div>
+          <p class="card-desc">Instantly remove or replace backgrounds with pixel-perfect precision.</p>
+          <div class="card-footer">
+            <span class="card-credit"><svg viewBox="0 0 24 24" fill="currentColor">
+                <circle cx="12" cy="12" r="10" />
+              </svg>1 credit/gen</span>
+            <span class="card-tag tag-image">Image</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- AI Animation -->
+      <div class="tool-card" data-category="video new" data-tool="ai_animation" data-replicate
+        style="animation-delay:0.28s" onclick="openModal('ai_animation')">
+        <div class="card-thumb bg-pink">
+          <div class="card-icon-wrap icon-pink">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+              <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2" />
+            </svg>
+          </div>
+          <div class="card-thumb-overlay"></div>
+        </div>
+        <div class="card-body">
+          <div class="card-top">
+            <span class="card-title">AI Animation</span>
+            <svg class="card-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M5 12h14M12 5l7 7-7 7" />
+            </svg>
+          </div>
+          <p class="card-desc">Bring still images to life. Cinematic motion from a single photo.</p>
+          <div class="card-footer">
+            <span class="card-credit"><svg viewBox="0 0 24 24" fill="currentColor">
+                <circle cx="12" cy="12" r="10" />
+              </svg>10 credits/gen</span>
+            <span class="card-tag tag-new-badge">New</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Image Upscaler -->
+      <div class="tool-card" data-category="image" data-tool="image_upscaler" data-replicate
+        style="animation-delay:0.32s" onclick="openModal('image_upscaler')">
+        <div class="card-thumb bg-gold">
+          <div class="card-icon-wrap icon-gold">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+              <path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7" />
+            </svg>
+          </div>
+          <div class="card-thumb-overlay"></div>
+        </div>
+        <div class="card-body">
+          <div class="card-top">
+            <span class="card-title">Image Upscaler</span>
+            <svg class="card-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M5 12h14M12 5l7 7-7 7" />
+            </svg>
+          </div>
+          <p class="card-desc">Upscale images up to 4x without losing quality. Perfect for print or display.</p>
+          <div class="card-footer">
+            <span class="card-credit"><svg viewBox="0 0 24 24" fill="currentColor">
+                <circle cx="12" cy="12" r="10" />
+              </svg>3 credits/gen</span>
+            <span class="card-tag tag-image">Image</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Lipsync -->
+      <div class="tool-card" data-category="video audio" data-tool="lipsync" style="animation-delay:0.36s"
+        onclick="openModal('lipsync')">
+        <div class="card-thumb bg-blue">
+          <div class="card-icon-wrap icon-blue">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+              <path d="M9 18V5l12-2v13" />
+              <circle cx="6" cy="18" r="3" />
+              <circle cx="18" cy="16" r="3" />
+            </svg>
+          </div>
+          <div class="card-thumb-overlay"></div>
+        </div>
+        <div class="card-body">
+          <div class="card-top">
+            <span class="card-title">Lipsync Video</span>
+            <svg class="card-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M5 12h14M12 5l7 7-7 7" />
+            </svg>
+          </div>
+          <p class="card-desc">Sync any video to any audio track. Flawless mouth movement, zero manual work.</p>
+          <div class="card-footer">
+            <span class="card-credit"><svg viewBox="0 0 24 24" fill="currentColor">
+                <circle cx="12" cy="12" r="10" />
+              </svg>8 credits/gen</span>
+            <span class="card-tag tag-video">Video</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Text to Speech -->
+      <div class="tool-card" data-category="audio" data-tool="text_to_speech" style="animation-delay:0.40s"
+        onclick="openModal('text_to_speech')">
+        <div class="card-thumb bg-green">
+          <div class="card-icon-wrap icon-green">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+              <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5" />
+              <path d="M15.54 8.46a5 5 0 010 7.07M19.07 4.93a10 10 0 010 14.14" />
+            </svg>
+          </div>
+          <div class="card-thumb-overlay"></div>
+        </div>
+        <div class="card-body">
+          <div class="card-top">
+            <span class="card-title">Text to Speech</span>
+            <svg class="card-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M5 12h14M12 5l7 7-7 7" />
+            </svg>
+          </div>
+          <p class="card-desc">Convert any text into natural-sounding speech with 200+ voice options.</p>
+          <div class="card-footer">
+            <span class="card-credit"><svg viewBox="0 0 24 24" fill="currentColor">
+                <circle cx="12" cy="12" r="10" />
+              </svg>3 credits/gen</span>
+            <span class="card-tag tag-audio">Audio</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Talking Photo -->
+      <div class="tool-card" data-category="video image" data-tool="talking_photo" style="animation-delay:0.44s"
+        onclick="openModal('talking_photo')">
+        <div class="card-thumb bg-purple">
+          <div class="card-icon-wrap icon-purple">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+              <circle cx="12" cy="8" r="4" />
+              <path d="M6 20v-1a6 6 0 0112 0v1" />
+              <path d="M19 3l-2 2 2 2" />
+            </svg>
+          </div>
+          <div class="card-thumb-overlay"></div>
+        </div>
+        <div class="card-body">
+          <div class="card-top">
+            <span class="card-title">Talking Photo</span>
+            <svg class="card-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M5 12h14M12 5l7 7-7 7" />
+            </svg>
+          </div>
+          <p class="card-desc">Make any photo speak. Upload a face, add audio, watch it come alive.</p>
+          <div class="card-footer">
+            <span class="card-credit"><svg viewBox="0 0 24 24" fill="currentColor">
+                <circle cx="12" cy="12" r="10" />
+              </svg>6 credits/gen</span>
+            <span class="card-tag tag-video">Video</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Style Transfer -->
+      <div class="tool-card" data-category="image new" data-tool="style_transfer" data-replicate
+        style="animation-delay:0.48s" onclick="openModal('style_transfer')">
+        <div class="card-thumb bg-red">
+          <div class="card-icon-wrap icon-red">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+              <path d="M12 20h9M16.5 3.5a2.121 2.121 0 013 3L7 19l-4 1 1-4L16.5 3.5z" />
+            </svg>
+          </div>
+          <div class="card-thumb-overlay"></div>
+        </div>
+        <div class="card-body">
+          <div class="card-top">
+            <span class="card-title">Style Transfer</span>
+            <svg class="card-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M5 12h14M12 5l7 7-7 7" />
+            </svg>
+          </div>
+          <p class="card-desc">Apply any artistic style to your images. Anime, oil paint, cyberpunk, and more.</p>
+          <div class="card-footer">
+            <span class="card-credit"><svg viewBox="0 0 24 24" fill="currentColor">
+                <circle cx="12" cy="12" r="10" />
+              </svg>4 credits/gen</span>
+            <span class="card-tag tag-new-badge">New</span>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <div class="section-divider"></div>
+
+    <!-- CTA BANNER -->
+    <div class="cta-banner">
+      <div class="cta-text">
+        <h3>Unlock unlimited creation.</h3>
+        <p>Go Pro and generate without limits. Faster queues, priority support, commercial license.</p>
+      </div>
+      <div class="cta-actions">
+        <button class="btn-secondary" onclick="window.location.href='credits.html'">See Plans</button>
+        <button class="btn-primary" onclick="window.location.href='credits.html'">Go Pro — $29/mo</button>
+      </div>
+    </div>
+
+  </main>
+
+  <!-- ═══════════════════════════════════════════════════════
+     TOOL MODAL
+════════════════════════════════════════════════════════ -->
+  <div id="toolModal" class="modal-backdrop" onclick="closeModalBackdrop(event)">
+    <div class="modal-sheet" id="modalSheet">
+      <div class="modal-header">
+        <div>
+          <div class="modal-eyebrow" id="modalEyebrow">Tool</div>
+          <div class="modal-title" id="modalTitle">Tool Name</div>
+          <div class="modal-cost" id="modalCost"></div>
+        </div>
+        <button class="modal-close" onclick="closeModal()">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M18 6L6 18M6 6l12 12" />
+          </svg>
+        </button>
+      </div>
+
+      <!-- FORM -->
+      <div id="modalForm"></div>
+
+      <!-- GENERATE BUTTON -->
+      <button class="modal-btn-generate" id="modalGenBtn" onclick="submitGeneration()">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="18" height="18">
+          <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2" />
+        </svg>
+        Generate
+      </button>
+
+      <!-- PROGRESS -->
+      <div class="modal-progress" id="modalProgress" style="display:none">
+        <div class="progress-bar-wrap">
+          <div class="progress-bar" id="progressBar"></div>
+        </div>
+        <div class="progress-label" id="progressLabel">Starting generation...</div>
+      </div>
+
+      <!-- RESULT -->
+      <div class="modal-result" id="modalResult" style="display:none"></div>
+    </div>
+  </div>
+
+  <style>
+    /* ── MODAL ── */
+    .modal-backdrop {
+      display: none;
+      position: fixed;
+      inset: 0;
+      z-index: 1000;
+      background: rgba(0, 0, 0, 0.7);
+      backdrop-filter: blur(6px);
+      align-items: flex-end;
+      justify-content: center;
+    }
+
+    .modal-backdrop.open {
+      display: flex;
+    }
+
+    .modal-sheet {
+      background: #0e1118;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-bottom: none;
+      border-radius: 20px 20px 0 0;
+      width: 100%;
+      max-width: 680px;
+      padding: 32px 32px 40px;
+      max-height: 88vh;
+      overflow-y: auto;
+      animation: slideUp 0.32s cubic-bezier(0.32, 0.72, 0, 1);
+    }
+
+    @keyframes slideUp {
+      from {
+        transform: translateY(100%);
+      }
+
+      to {
+        transform: translateY(0);
+      }
+    }
+
+    .modal-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      margin-bottom: 24px;
+    }
+
+    .modal-eyebrow {
+      font-size: 10px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 1.5px;
+      color: var(--accent2);
+      margin-bottom: 4px;
+    }
+
+    .modal-title {
+      font-family: 'Syne', sans-serif;
+      font-size: 22px;
+      font-weight: 700;
+      letter-spacing: -0.4px;
+    }
+
+    .modal-cost {
+      font-size: 12px;
+      color: var(--text-muted);
+      margin-top: 4px;
+    }
+
+    .modal-close {
+      width: 36px;
+      height: 36px;
+      border-radius: 8px;
+      border: 1px solid var(--border);
+      background: rgba(255, 255, 255, 0.04);
+      color: var(--text-muted);
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      transition: all 0.18s;
+    }
+
+    .modal-close:hover {
+      background: rgba(255, 255, 255, 0.08);
+      color: var(--text);
+    }
+
+    .modal-close svg {
+      width: 16px;
+      height: 16px;
+    }
+
+    /* Form elements inside modal */
+    .form-group {
+      margin-bottom: 18px;
+    }
+
+    .form-label {
+      display: block;
+      font-size: 12px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.8px;
+      color: var(--text-muted);
+      margin-bottom: 8px;
+    }
+
+    .form-input,
+    .form-textarea,
+    .form-select {
+      width: 100%;
+      background: rgba(255, 255, 255, 0.04);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      color: var(--text);
+      font-family: 'DM Sans', sans-serif;
+      font-size: 14px;
+      transition: border-color 0.18s;
+      outline: none;
+    }
+
+    .form-input {
+      padding: 11px 14px;
+    }
+
+    .form-textarea {
+      padding: 11px 14px;
+      resize: vertical;
+      min-height: 100px;
+    }
+
+    .form-select {
+      padding: 11px 14px;
+      cursor: pointer;
+    }
+
+    .form-input:focus,
+    .form-textarea:focus,
+    .form-select:focus {
+      border-color: var(--accent2);
+    }
+
+    .form-hint {
+      font-size: 11px;
+      color: var(--text-dim);
+      margin-top: 5px;
+    }
+
+    .upload-zone {
+      border: 1.5px dashed rgba(255, 255, 255, 0.12);
+      border-radius: 10px;
+      padding: 24px;
+      text-align: center;
+      cursor: pointer;
+      transition: all 0.2s;
+      background: rgba(255, 255, 255, 0.02);
+    }
+
+    .upload-zone:hover,
+    .upload-zone.drag-over {
+      border-color: var(--accent2);
+      background: rgba(124, 107, 222, 0.06);
+    }
+
+    .upload-zone svg {
+      width: 28px;
+      height: 28px;
+      color: var(--text-dim);
+      margin-bottom: 8px;
+    }
+
+    .upload-zone p {
+      font-size: 13px;
+      color: var(--text-muted);
+    }
+
+    .upload-zone span {
+      font-size: 11px;
+      color: var(--text-dim);
+    }
+
+    .upload-preview {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 10px 14px;
+      background: rgba(255, 255, 255, 0.04);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      margin-top: 8px;
+      font-size: 13px;
+    }
+
+    .upload-preview svg {
+      width: 16px;
+      height: 16px;
+      color: var(--accent3);
+      flex-shrink: 0;
+    }
+
+    .upload-preview span {
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      flex: 1;
+    }
+
+    .upload-remove {
+      cursor: pointer;
+      color: var(--text-dim);
+      flex-shrink: 0;
+      font-size: 18px;
+      line-height: 1;
+    }
+
+    .upload-remove:hover {
+      color: #f08080;
+    }
+
+    .modal-btn-generate {
+      width: 100%;
+      margin-top: 24px;
+      padding: 14px;
+      background: linear-gradient(135deg, var(--accent2), #5c4dbe);
+      border: none;
+      border-radius: 10px;
+      color: #fff;
+      font-family: 'Syne', sans-serif;
+      font-size: 15px;
+      font-weight: 700;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      transition: all 0.2s;
+    }
+
+    .modal-btn-generate:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 8px 28px rgba(124, 107, 222, 0.4);
+    }
+
+    .modal-btn-generate:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+      transform: none;
+      box-shadow: none;
+    }
+
+    .modal-progress {
+      margin-top: 20px;
+    }
+
+    .progress-bar-wrap {
+      height: 4px;
+      background: rgba(255, 255, 255, 0.07);
+      border-radius: 2px;
+      overflow: hidden;
+      margin-bottom: 10px;
+    }
+
+    .progress-bar {
+      height: 100%;
+      background: linear-gradient(90deg, var(--accent2), var(--accent));
+      border-radius: 2px;
+      width: 0%;
+      transition: width 0.6s ease;
+      animation: progressPulse 2s ease-in-out infinite;
+    }
+
+    @keyframes progressPulse {
+
+      0%,
+      100% {
+        opacity: 1;
+      }
+
+      50% {
+        opacity: 0.7;
+      }
+    }
+
+    .progress-label {
+      font-size: 12px;
+      color: var(--text-muted);
+    }
+
+    .modal-result {
+      margin-top: 20px;
+    }
+
+    .result-video {
+      width: 100%;
+      border-radius: 10px;
+      max-height: 360px;
+    }
+
+    .result-image {
+      width: 100%;
+      border-radius: 10px;
+    }
+
+    .result-actions {
+      display: flex;
+      gap: 10px;
+      margin-top: 14px;
+    }
+
+    .btn-download {
+      flex: 1;
+      padding: 11px;
+      border-radius: 8px;
+      border: 1px solid var(--accent3);
+      background: rgba(62, 207, 142, 0.08);
+      color: var(--accent3);
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.18s;
+      font-family: 'DM Sans', sans-serif;
+    }
+
+    .btn-download:hover {
+      background: rgba(62, 207, 142, 0.15);
+    }
+
+    .btn-new-gen {
+      flex: 1;
+      padding: 11px;
+      border-radius: 8px;
+      border: 1px solid var(--border);
+      background: rgba(255, 255, 255, 0.04);
+      color: var(--text-muted);
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.18s;
+      font-family: 'DM Sans', sans-serif;
+    }
+
+    .btn-new-gen:hover {
+      background: rgba(255, 255, 255, 0.08);
+      color: var(--text);
+    }
+
+    .result-error {
+      background: rgba(240, 128, 128, 0.08);
+      border: 1px solid rgba(240, 128, 128, 0.2);
+      border-radius: 8px;
+      padding: 16px;
+      font-size: 13px;
+      color: #f08080;
+    }
+
+    .nav-credits-demo {
+      font-size: 10px;
+      color: var(--text-dim);
+      margin-top: 2px;
+      text-align: center;
+    }
+  </style>
+
+  <script src="GODBODY-api.js"></script>
+  <script>
+    // ═══════════════════════════════════
+    // TOOL REGISTRY
+    // ═══════════════════════════════════
+    const TOOLS = {
+      talking_photo: { name: 'Talking Photo', cost: 6, category: 'video', form: 'talking_photo' },
+      avatar_video: { name: 'AI Video Generator', cost: 10, category: 'video', form: 'avatar_video' },
+      lipsync: { name: 'Lipsync Video', cost: 8, category: 'video', form: 'lipsync' },
+      video_translate: { name: 'Video Translate', cost: 12, category: 'video', form: 'video_translate' },
+      face_swap: { name: 'Face Swap', cost: 4, category: 'image', form: 'text_prompt' },
+      ai_headshots: { name: 'AI Headshots', cost: 8, category: 'image', form: 'text_prompt' },
+      text_to_image: { name: 'Text to Image', cost: 2, category: 'image', form: 'text_prompt' },
+      video_to_video: { name: 'Video to Video', cost: 12, category: 'video', form: 'text_prompt' },
+      voice_clone: { name: 'Voice Clone', cost: 5, category: 'audio', form: 'text_prompt' },
+      background_remove: { name: 'Background Remove', cost: 1, category: 'image', form: 'text_prompt' },
+      ai_animation: { name: 'AI Animation', cost: 10, category: 'video', form: 'text_prompt' },
+      image_upscaler: { name: 'Image Upscaler', cost: 3, category: 'image', form: 'text_prompt' },
+      text_to_speech: { name: 'Text to Speech', cost: 3, category: 'audio', form: 'text_prompt' },
+      style_transfer: { name: 'Style Transfer', cost: 4, category: 'image', form: 'text_prompt' },
+    };
+
+    const FORM_TEMPLATES = {
+      talking_photo: () => `
+    <div class="form-group">
+      <label class="form-label">Photo <span style="color:var(--text-dim)">(face photo)</span></label>
+      <div class="upload-zone" id="zone-photo" onclick="triggerUpload('photo','image/*')"
+           ondragover="dragOver(event,'photo')" ondragleave="dragLeave('photo')" ondrop="dropFile(event,'photo')">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="M21 15l-5-5L5 21"/></svg>
+        <p>Drop an image or click to browse</p>
+        <span>JPG, PNG up to 10 MB</span>
+      </div>
+      <div class="upload-preview" id="preview-photo" style="display:none">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11"/></svg>
+        <span id="name-photo"></span>
+        <span class="upload-remove" onclick="clearUpload('photo')">×</span>
+      </div>
+      <input type="file" id="file-photo" accept="image/*" style="display:none" onchange="fileChosen('photo',this)">
+    </div>
+    <div class="form-group">
+      <label class="form-label">Audio <span style="color:var(--text-dim)">(the voice to speak)</span></label>
+      <div class="upload-zone" id="zone-audio" onclick="triggerUpload('audio','audio/*')"
+           ondragover="dragOver(event,'audio')" ondragleave="dragLeave('audio')" ondrop="dropFile(event,'audio')">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 1a3 3 0 00-3 3v8a3 3 0 006 0V4a3 3 0 00-3-3z"/><path d="M19 10v2a7 7 0 01-14 0v-2M12 19v4m-4 0h8"/></svg>
+        <p>Drop audio or click to browse</p>
+        <span>MP3, WAV, M4A up to 30 MB</span>
+      </div>
+      <div class="upload-preview" id="preview-audio" style="display:none">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11"/></svg>
+        <span id="name-audio"></span>
+        <span class="upload-remove" onclick="clearUpload('audio')">×</span>
+      </div>
+      <input type="file" id="file-audio" accept="audio/*" style="display:none" onchange="fileChosen('audio',this)">
+    </div>`,
+
+      avatar_video: () => `
+    <div class="form-group">
+      <label class="form-label">Script</label>
+      <textarea class="form-textarea" id="field-script" placeholder="Type what the avatar should say... (max 3,000 chars)" maxlength="3000"></textarea>
+      <div class="form-hint">The avatar will speak this text in natural-sounding voice.</div>
+    </div>
+    <div class="form-group">
+      <label class="form-label">Avatar ID</label>
+      <input class="form-input" id="field-avatarId" placeholder="e.g. Abigail_expressive_2024112501" value="Abigail_expressive_2024112501">
+      <div class="form-hint">HeyGen avatar ID — find yours in your HeyGen dashboard.</div>
+    </div>
+    <div class="form-group">
+      <label class="form-label">Voice ID</label>
+      <input class="form-input" id="field-voiceId" placeholder="e.g. 2d5b0e6664554a819784ad548f65d40e" value="2d5b0e6664554a819784ad548f65d40e">
+    </div>`,
+
+      lipsync: () => `
+    <div class="form-group">
+      <label class="form-label">Video file <span style="color:var(--text-dim)">(the mouth to sync)</span></label>
+      <div class="upload-zone" id="zone-video" onclick="triggerUpload('video','video/*')"
+           ondragover="dragOver(event,'video')" ondragleave="dragLeave('video')" ondrop="dropFile(event,'video')">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M15 10l4.553-2.069A1 1 0 0121 8.87v6.26a1 1 0 01-1.447.894L15 14M3 8a2 2 0 012-2h8a2 2 0 012 2v8a2 2 0 01-2 2H5a2 2 0 01-2-2V8z"/></svg>
+        <p>Drop a video or click to browse</p>
+        <span>MP4, MOV up to 100 MB</span>
+      </div>
+      <div class="upload-preview" id="preview-video" style="display:none">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 11l3 3L22 4"/></svg>
+        <span id="name-video"></span>
+        <span class="upload-remove" onclick="clearUpload('video')">×</span>
+      </div>
+      <input type="file" id="file-video" accept="video/*" style="display:none" onchange="fileChosen('video',this)">
+    </div>
+    <div class="form-group">
+      <label class="form-label">Audio file <span style="color:var(--text-dim)">(replacement audio)</span></label>
+      <div class="upload-zone" id="zone-audio" onclick="triggerUpload('audio','audio/*')"
+           ondragover="dragOver(event,'audio')" ondragleave="dragLeave('audio')" ondrop="dropFile(event,'audio')">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 1a3 3 0 00-3 3v8a3 3 0 006 0V4a3 3 0 00-3-3z"/><path d="M19 10v2a7 7 0 01-14 0v-2M12 19v4m-4 0h8"/></svg>
+        <p>Drop audio or click to browse</p>
+        <span>MP3, WAV up to 30 MB</span>
+      </div>
+      <div class="upload-preview" id="preview-audio" style="display:none">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 11l3 3L22 4"/></svg>
+        <span id="name-audio"></span>
+        <span class="upload-remove" onclick="clearUpload('audio')">×</span>
+      </div>
+      <input type="file" id="file-audio" accept="audio/*" style="display:none" onchange="fileChosen('audio',this)">
+    </div>`,
+
+      video_translate: () => `
+    <div class="form-group">
+      <label class="form-label">Video file</label>
+      <div class="upload-zone" id="zone-video" onclick="triggerUpload('video','video/*')"
+           ondragover="dragOver(event,'video')" ondragleave="dragLeave('video')" ondrop="dropFile(event,'video')">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M15 10l4.553-2.069A1 1 0 0121 8.87v6.26a1 1 0 01-1.447.894L15 14M3 8a2 2 0 012-2h8a2 2 0 012 2v8a2 2 0 01-2 2H5a2 2 0 01-2-2V8z"/></svg>
+        <p>Drop a video or click to browse</p>
+        <span>MP4, MOV up to 100 MB</span>
+      </div>
+      <div class="upload-preview" id="preview-video" style="display:none">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 11l3 3L22 4"/></svg>
+        <span id="name-video"></span>
+        <span class="upload-remove" onclick="clearUpload('video')">×</span>
+      </div>
+      <input type="file" id="file-video" accept="video/*" style="display:none" onchange="fileChosen('video',this)">
+    </div>
+    <div class="form-group">
+      <label class="form-label">Output Language</label>
+      <select class="form-select" id="field-outputLanguage">
+        <option value="es">Spanish</option>
+        <option value="fr">French</option>
+        <option value="de">German</option>
+        <option value="ar">Arabic</option>
+        <option value="zh">Chinese</option>
+        <option value="ja">Japanese</option>
+        <option value="ko">Korean</option>
+        <option value="pt">Portuguese</option>
+        <option value="hi">Hindi</option>
+        <option value="ru">Russian</option>
+      </select>
+    </div>`,
+
+      text_prompt: (tool) => `
+    <div class="form-group">
+      <label class="form-label">Describe what you want</label>
+      <textarea class="form-textarea" id="field-prompt" placeholder="${getPlaceholder(tool)}" style="min-height:120px;"></textarea>
+    </div>`,
+    };
+
+    function getPlaceholder(tool) {
+      const ph = {
+        text_to_image: 'A neon-lit futuristic city at night, rain reflections, 8K, cinematic...',
+        face_swap: 'Describe the target face or style you want to swap to...',
+        ai_headshots: 'Professional headshot, studio lighting, dark background, formal attire...',
+        video_to_video: 'Transform the video into a cyberpunk aesthetic with neon lights...',
+        voice_clone: 'Enter the text you want spoken, or describe the voice style...',
+        background_remove: 'Describe what background to replace with, or leave blank to remove...',
+        ai_animation: 'Describe the motion: slow camera pan left, gentle breeze effect...',
+        image_upscaler: 'Describe any enhancement details (optional — leave blank to upscale as-is)...',
+        text_to_speech: 'Enter the text to convert to speech...',
+        style_transfer: 'Apply anime style, oil painting texture, cyberpunk neon aesthetic...',
+      };
+      return ph[tool] || 'Describe your creative vision...';
+    }
+
+    // ═══════════════════════════════════
+    // MODAL STATE
+    // ═══════════════════════════════════
+    let currentTool = null;
+    let uploadedFiles = {};
+    let isPollRunning = false;
+    let pollTimer = null;
+
+    // Tools with dedicated full pages
+    const TOOL_PAGES = {
+      avatar_video: 'tools/avatar-video.html',
+      talking_photo: 'upload-ui.html',
+      face_swap: 'tools/face-swap.html',
+      text_to_image: 'tools/text-to-image.html',
+    };
+
+    // Tools that need Replicate (coming soon when no key)
+    const REPLICATE_TOOLS = new Set(['face_swap', 'ai_headshots', 'text_to_image', 'background_remove', 'ai_animation', 'image_upscaler', 'style_transfer', 'video_to_video']);
+
+    function showComingSoon(toolName) {
+      const existing = document.getElementById('comingSoonToast');
+      if (existing) existing.remove();
+      const toast = document.createElement('div');
+      toast.id = 'comingSoonToast';
+      toast.style.cssText = `position:fixed;bottom:32px;left:50%;transform:translateX(-50%);background:#131720;border:1px solid rgba(200,169,110,0.3);border-radius:10px;padding:14px 22px;display:flex;align-items:center;gap:10px;z-index:9999;animation:slideUp .3s ease;font-size:14px;box-shadow:0 8px 32px rgba(0,0,0,0.5)`;
+      toast.innerHTML = `<span style="font-size:18px">⚡</span><div><strong style="color:#c8a96e">${toolName}</strong> — <span style="color:#8b90a0">Add your Replicate API key to unlock</span></div>`;
+      document.body.appendChild(toast);
+      setTimeout(() => toast.style.opacity = '0', 3500);
+      setTimeout(() => toast.remove(), 4000);
+    }
+
+    function openModal(toolId) {
+      // Redirect tools that have dedicated pages
+      if (TOOL_PAGES[toolId]) {
+        window.location.href = TOOL_PAGES[toolId];
+        return;
+      }
+
+
+      const tool = TOOLS[toolId];
+      if (!tool) return;
+      currentTool = toolId;
+      uploadedFiles = {};
+
+      document.getElementById('modalEyebrow').textContent = tool.category.toUpperCase();
+      document.getElementById('modalTitle').textContent = tool.name;
+      document.getElementById('modalCost').textContent = `${tool.cost} credits per generation`;
+      document.getElementById('modalProgress').style.display = 'none';
+      document.getElementById('modalResult').style.display = 'none';
+      document.getElementById('modalGenBtn').style.display = 'flex';
+      document.getElementById('modalGenBtn').disabled = false;
+      document.getElementById('modalGenBtn').innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="18" height="18"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg> Generate';
+      document.getElementById('progressBar').style.width = '0%';
+
+      const formFn = FORM_TEMPLATES[tool.form];
+      document.getElementById('modalForm').innerHTML = formFn ? formFn(toolId) : '';
+
+      document.getElementById('toolModal').classList.add('open');
+      document.body.style.overflow = 'hidden';
+    }
+
+    function closeModal() {
+      document.getElementById('toolModal').classList.remove('open');
+      document.body.style.overflow = '';
+      if (pollTimer) { clearInterval(pollTimer); pollTimer = null; }
+    }
+
+    function closeModalBackdrop(e) {
+      if (e.target === document.getElementById('toolModal')) closeModal();
+    }
+
+    // ═══════════════════════════════════
+    // FILE UPLOAD HELPERS
+    // ═══════════════════════════════════
+    function triggerUpload(slot, accept) {
+      document.getElementById('file-' + slot).click();
+    }
+
+    function dragOver(e, slot) {
+      e.preventDefault();
+      document.getElementById('zone-' + slot)?.classList.add('drag-over');
+    }
+    function dragLeave(slot) {
+      document.getElementById('zone-' + slot)?.classList.remove('drag-over');
+    }
+    function dropFile(e, slot) {
+      e.preventDefault();
+      dragLeave(slot);
+      const file = e.dataTransfer.files[0];
+      if (file) applyFile(slot, file);
+    }
+    function fileChosen(slot, input) {
+      const file = input.files[0];
+      if (file) applyFile(slot, file);
+    }
+    function applyFile(slot, file) {
+      uploadedFiles[slot] = file;
+      const zone = document.getElementById('zone-' + slot);
+      const preview = document.getElementById('preview-' + slot);
+      const name = document.getElementById('name-' + slot);
+      if (zone) zone.style.display = 'none';
+      if (preview) preview.style.display = 'flex';
+      if (name) name.textContent = file.name;
+    }
+    function clearUpload(slot) {
+      uploadedFiles[slot] = null;
+      const zone = document.getElementById('zone-' + slot);
+      const preview = document.getElementById('preview-' + slot);
+      if (zone) zone.style.display = 'flex';
+      if (preview) preview.style.display = 'none';
+    }
+
+    // ═══════════════════════════════════
+    // UPLOAD FILE TO SERVER
+    // ═══════════════════════════════════
+    async function uploadFile(file) {
+      const form = new FormData();
+      form.append('file', file);
+      const res = await fetch('http://localhost:3001/api/upload', {
+        method: 'POST',
+        headers: { 'x-user-id': 'demo-user' },
+        body: form,
+      });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error || 'Upload failed');
+      return data.url || data.fileUrl;
+    }
+
+    // ═══════════════════════════════════
+    // SUBMIT GENERATION
+    // ═══════════════════════════════════
+    async function submitGeneration() {
+      const tool = TOOLS[currentTool];
+      if (!tool) return;
+
+      const btn = document.getElementById('modalGenBtn');
+      btn.disabled = true;
+      btn.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16" style="animation:spin 1s linear infinite"><path d="M21 12a9 9 0 11-18 0 9 9 0 0118 0"/></svg> Starting...';
+
+      setProgress(5, 'Uploading files...');
+
+      try {
+        let jobId;
+
+        if (currentTool === 'talking_photo') {
+          if (!uploadedFiles.photo || !uploadedFiles.audio) {
+            alert('Please upload both a photo and an audio file.'); resetBtn(); return;
+          }
+          setProgress(20, 'Uploading photo...');
+          const photoUrl = await uploadFile(uploadedFiles.photo);
+          setProgress(40, 'Uploading audio...');
+          const audioUrl = await uploadFile(uploadedFiles.audio);
+          setProgress(55, 'Submitting to HeyGen...');
+          const res = await window.NoorAPI.generateTalkingPhoto({
+            photoUrl, audioUrl,
+            onProgress: (j) => setProgress(60 + (j.progress || 0) * 0.35, 'Generating talking photo...')
+          });
+          jobId = res.jobId || 'done';
+          showResult(res);
+
+        } else if (currentTool === 'avatar_video') {
+          const script = document.getElementById('field-script')?.value?.trim();
+          const avatarId = document.getElementById('field-avatarId')?.value?.trim();
+          const voiceId = document.getElementById('field-voiceId')?.value?.trim();
+          if (!script) { alert('Please enter a script.'); resetBtn(); return; }
+          setProgress(30, 'Submitting to HeyGen...');
+          const res = await window.NoorAPI.generateAvatarVideo({
+            avatarId, voiceId, script,
+            onProgress: (j) => setProgress(35 + (j.progress || 0) * 0.6, 'Generating avatar video...')
+          });
+          showResult(res);
+
+        } else if (currentTool === 'lipsync') {
+          if (!uploadedFiles.video || !uploadedFiles.audio) {
+            alert('Please upload both a video and an audio file.'); resetBtn(); return;
+          }
+          setProgress(20, 'Uploading video...');
+          const videoUrl = await uploadFile(uploadedFiles.video);
+          setProgress(40, 'Uploading audio...');
+          const audioUrl = await uploadFile(uploadedFiles.audio);
+          setProgress(55, 'Submitting to HeyGen...');
+          const res = await window.NoorAPI.generateLipsync({
+            videoUrl, audioUrl,
+            onProgress: (j) => setProgress(60 + (j.progress || 0) * 0.35, 'Generating lipsync...')
+          });
+          showResult(res);
+
+        } else if (currentTool === 'video_translate') {
+          if (!uploadedFiles.video) { alert('Please upload a video file.'); resetBtn(); return; }
+          const outputLanguage = document.getElementById('field-outputLanguage')?.value;
+          setProgress(30, 'Uploading video...');
+          const videoUrl = await uploadFile(uploadedFiles.video);
+          setProgress(55, 'Submitting to HeyGen...');
+          const res = await window.NoorAPI.translateVideo({
+            videoUrl, outputLanguage,
+            onProgress: (j) => setProgress(60 + (j.progress || 0) * 0.35, 'Translating video...')
+          });
+          showResult(res);
+
+        } else {
+          // Text-prompt tools — demo mode (no real API call)
+          const prompt = document.getElementById('field-prompt')?.value?.trim();
+          if (!prompt) { alert('Please enter a prompt.'); resetBtn(); return; }
+          setProgress(30, 'Sending request...');
+          await delay(800);
+          setProgress(70, 'Processing...');
+          await delay(1200);
+          setProgress(100, 'Done!');
+          showDemoResult(currentTool, prompt);
+          return;
+        }
+
+        setProgress(100, 'Complete!');
+        loadBalance(); // refresh credits
+
+      } catch (err) {
+        setProgress(0, '');
+        document.getElementById('modalProgress').style.display = 'none';
+        document.getElementById('modalResult').style.display = 'block';
+        document.getElementById('modalResult').innerHTML = `
+      <div class="result-error">
+        <strong>Generation failed:</strong> ${err.message}
+        <br><small style="opacity:0.7;margin-top:6px;display:block">Make sure your HeyGen API key is set in .env and the server is running.</small>
+      </div>
+      <div class="result-actions"><button class="btn-new-gen" onclick="resetForm()">Try Again</button></div>`;
+        resetBtn();
+      }
+    }
+
+    function setProgress(pct, label) {
+      document.getElementById('modalProgress').style.display = 'block';
+      document.getElementById('modalGenBtn').style.display = 'none';
+      document.getElementById('progressBar').style.width = pct + '%';
+      document.getElementById('progressLabel').textContent = label;
+    }
+
+    function showResult(job) {
+      const outputUrl = job.outputUrl || job.url;
+      const isVideo = currentTool !== 'text_to_image' && currentTool !== 'ai_headshots' &&
+        currentTool !== 'background_remove' && currentTool !== 'image_upscaler' &&
+        currentTool !== 'style_transfer';
+
+      document.getElementById('modalProgress').style.display = 'none';
+      document.getElementById('modalResult').style.display = 'block';
+      document.getElementById('modalResult').innerHTML = outputUrl ? `
+    ${isVideo
+          ? `<video class="result-video" controls src="${outputUrl}"></video>`
+          : `<img class="result-image" src="${outputUrl}" alt="Generated result">`}
+    <div class="result-actions">
+      <a href="${outputUrl}" download class="btn-download">⬇ Download</a>
+      <button class="btn-new-gen" onclick="resetForm()">Generate Again</button>
+    </div>` :
+        `<div class="result-error">Generation completed but no output URL was returned. Check the HeyGen dashboard.</div>`;
+    }
+
+    function showDemoResult(toolId, prompt) {
+      document.getElementById('modalProgress').style.display = 'none';
+      document.getElementById('modalResult').style.display = 'block';
+      const tool = TOOLS[toolId];
+      document.getElementById('modalResult').innerHTML = `
+    <div style="background:rgba(124,107,222,0.08);border:1px solid rgba(124,107,222,0.2);border-radius:10px;padding:20px;">
+      <div style="font-family:'Syne',sans-serif;font-size:13px;font-weight:700;color:var(--accent2);margin-bottom:8px;text-transform:uppercase;letter-spacing:1px;">Demo Mode</div>
+      <div style="font-size:14px;color:var(--text-muted);line-height:1.6;">
+        <strong>${tool.name}</strong> requires a HeyGen API key for real generation.
+        Add your <code style="background:rgba(255,255,255,0.06);padding:2px 6px;border-radius:4px">HEYGEN_API_KEY</code> to <code style="background:rgba(255,255,255,0.06);padding:2px 6px;border-radius:4px">.env</code> to enable live generation.
+      </div>
+      <div style="margin-top:12px;padding:12px;background:rgba(255,255,255,0.04);border-radius:6px;font-size:12px;color:var(--text-dim);">
+        <strong>Your prompt:</strong> ${prompt.substring(0, 200)}
+      </div>
+    </div>
+    <div class="result-actions"><button class="btn-new-gen" onclick="resetForm()">Try Again</button></div>`;
+    }
+
+    function resetBtn() {
+      const btn = document.getElementById('modalGenBtn');
+      btn.disabled = false;
+      btn.style.display = 'flex';
+      btn.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="18" height="18"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg> Generate';
+    }
+
+    function resetForm() {
+      if (currentTool) openModal(currentTool);
+    }
+
+    function delay(ms) { return new Promise(r => setTimeout(r, ms)); }
+
+    // ═══════════════════════════════════
+    // LIVE CREDIT BALANCE
+    // ═══════════════════════════════════
+    async function loadBalance() {
+      try {
+        const userId = getUserId();
+        const isOwner = isAdminSession();
+
+        // Show/hide admin badge
+        const badge = document.getElementById('adminBadge');
+        const btn = document.getElementById('navActionBtn');
+        if (isOwner) {
+          badge.style.display = 'flex';
+          document.getElementById('navCredits').textContent = '∞';
+          if (btn) { btn.textContent = 'Owner Mode'; btn.onclick = () => window.location.href = 'admin-login.html'; }
+          return;
+        }
+        if (badge) badge.style.display = 'none';
+
+        const res = await fetch('http://localhost:3001/api/jobs/credits/balance', {
+          headers: { 'x-user-id': userId }
+        });
+        const data = await res.json();
+        const credits = (data.credits ?? 0).toLocaleString();
+        document.getElementById('navCredits').textContent = credits;
+      } catch { }
+    }
+
+    // ═══════════════════════════════════
+    // FILTER LOGIC
+    // ═══════════════════════════════════
+    function filterTools(category, btn) {
+      document.querySelectorAll('.filter-chip').forEach(c => c.classList.remove('active'));
+      btn.classList.add('active');
+
+      const cards = document.querySelectorAll('.tool-card');
+      let shownIdx = 0;
+      cards.forEach(card => {
+        const cats = card.dataset.category || '';
+        const show = category === 'all' || cats.includes(category);
+        card.style.display = show ? 'block' : 'none';
+        if (show) {
+          card.style.animationDelay = (shownIdx++ * 0.05) + 's';
+          card.style.animation = 'none';
+          card.offsetHeight;
+          card.style.animation = 'cardIn 0.35s ease-out both';
+        }
+      });
+
+      const featured = document.querySelector('.featured-tool');
+      const featCats = featured.dataset.category || '';
+      featured.style.display = (category === 'all' || featCats.includes(category)) ? 'grid' : 'none';
+    }
+
+    // Nav tab switching
+    document.querySelectorAll('.nav-tab').forEach(tab => {
+      tab.addEventListener('click', () => {
+        document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
+        tab.classList.add('active');
+      });
+    });
+
+    // Keyboard close
+    document.addEventListener('keydown', e => { if (e.key === 'Escape') closeModal(); });
+
+    // Spinner keyframe
+    const spinStyle = document.createElement('style');
+    spinStyle.textContent = '@keyframes spin { to { transform: rotate(360deg); } }';
+    document.head.appendChild(spinStyle);
+
+    // Init
+    loadBalance();
+  </script>
+</body>
+
+</html>

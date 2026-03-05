@@ -1,0 +1,316 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Godbody AI — Credits</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;1,9..40,300&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  :root {
+    --bg: #080a0f; --bg2: #0e1118; --bg3: #131720;
+    --border: rgba(255,255,255,0.07); --text: #f0f2f7;
+    --muted: #8b90a0; --dim: #4a5060;
+    --accent: #c8a96e; --purple: #7c6bde; --green: #3ecf8e;
+  }
+  body { background: var(--bg); color: var(--text); font-family: 'DM Sans', sans-serif; font-size: 15px; min-height: 100vh; overflow-x: hidden; }
+  body::before { content: ''; position: fixed; inset: 0; background: radial-gradient(ellipse 80% 40% at 50% -5%, rgba(124,107,222,0.12) 0%, transparent 60%), radial-gradient(ellipse 50% 30% at 90% 80%, rgba(200,169,110,0.07) 0%, transparent 50%); pointer-events: none; z-index: 0; }
+  nav { position: sticky; top: 0; z-index: 100; display: flex; align-items: center; justify-content: space-between; padding: 0 32px; height: 64px; background: rgba(8,10,15,0.9); backdrop-filter: blur(20px); border-bottom: 1px solid var(--border); }
+  .nav-logo { display: flex; align-items: center; gap: 8px; font-family: 'Syne', sans-serif; font-weight: 700; font-size: 17px; color: var(--text); text-decoration: none; }
+  .logo-mark { width: 30px; height: 30px; background: linear-gradient(135deg, #c8a96e, #7c6bde); border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 13px; font-weight: 800; color: #fff; }
+  .nav-balance { display: flex; align-items: center; gap: 8px; }
+  .balance-num { font-family: 'Syne', sans-serif; font-size: 15px; font-weight: 700; color: var(--accent); }
+  .balance-label { font-size: 11px; color: var(--dim); }
+  main { position: relative; z-index: 1; max-width: 1100px; margin: 0 auto; padding: 60px 32px 100px; }
+  .page-hero { text-align: center; margin-bottom: 64px; }
+  .hero-eyebrow { display: inline-flex; align-items: center; gap: 6px; padding: 4px 14px; background: rgba(200,169,110,0.1); border: 1px solid rgba(200,169,110,0.2); border-radius: 20px; font-size: 11px; font-weight: 600; color: var(--accent); text-transform: uppercase; letter-spacing: 1.2px; margin-bottom: 20px; }
+  .page-hero h1 { font-family: 'Syne', sans-serif; font-size: 48px; font-weight: 800; letter-spacing: -2px; margin-bottom: 14px; line-height: 1.05; }
+  .gradient-text { background: linear-gradient(120deg, #c8a96e 0%, #e8c88e 50%, #7c6bde 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+  .page-hero p { color: var(--muted); font-size: 17px; max-width: 480px; margin: 0 auto; line-height: 1.7; }
+  .balance-card { background: var(--bg2); border: 1px solid rgba(200,169,110,0.2); border-radius: 16px; padding: 28px 32px; display: flex; align-items: center; justify-content: space-between; margin-bottom: 48px; gap: 24px; }
+  .balance-card-left { display: flex; align-items: center; gap: 20px; }
+  .balance-icon { width: 52px; height: 52px; border-radius: 12px; background: rgba(200,169,110,0.12); display: flex; align-items: center; justify-content: center; color: var(--accent); }
+  .balance-icon svg { width: 24px; height: 24px; }
+  .balance-card h3 { font-family: 'Syne', sans-serif; font-size: 13px; font-weight: 600; text-transform: uppercase; letter-spacing: 1px; color: var(--muted); margin-bottom: 4px; }
+  .balance-big { font-family: 'Syne', sans-serif; font-size: 36px; font-weight: 800; letter-spacing: -1px; color: var(--accent); }
+  .balance-sub { font-size: 13px; color: var(--dim); margin-top: 2px; }
+  .success-banner { display: none; background: rgba(62,207,142,0.08); border: 1px solid rgba(62,207,142,0.25); border-radius: 12px; padding: 16px 20px; margin-bottom: 32px; align-items: center; gap: 12px; }
+  .success-banner.visible { display: flex; }
+  .success-banner svg { width: 20px; height: 20px; color: var(--green); flex-shrink: 0; }
+  .success-banner h4 { font-family: 'Syne', sans-serif; font-size: 14px; font-weight: 600; margin-bottom: 2px; }
+  .success-banner p { font-size: 13px; color: var(--muted); }
+  .pricing-label { font-family: 'Syne', sans-serif; font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 2px; color: var(--dim); margin-bottom: 24px; }
+  .pricing-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(230px, 1fr)); gap: 16px; margin-bottom: 60px; }
+  .price-card { background: var(--bg2); border: 1px solid var(--border); border-radius: 16px; padding: 28px; position: relative; cursor: pointer; transition: all 0.22s; display: flex; flex-direction: column; animation: cardIn 0.4s ease-out both; }
+  @keyframes cardIn { from { opacity: 0; transform: translateY(16px); } to { opacity: 1; transform: translateY(0); } }
+  .price-card:nth-child(1) { animation-delay: 0.05s; } .price-card:nth-child(2) { animation-delay: 0.10s; } .price-card:nth-child(3) { animation-delay: 0.15s; } .price-card:nth-child(4) { animation-delay: 0.20s; }
+  .price-card:hover { border-color: rgba(255,255,255,0.15); transform: translateY(-4px); box-shadow: 0 16px 48px rgba(0,0,0,0.4); }
+  .price-card.popular { border-color: rgba(200,169,110,0.35); background: linear-gradient(160deg, rgba(200,169,110,0.06) 0%, var(--bg2) 60%); }
+  .price-card.popular:hover { border-color: rgba(200,169,110,0.6); box-shadow: 0 16px 48px rgba(200,169,110,0.12); }
+  .popular-badge { position: absolute; top: -12px; left: 50%; transform: translateX(-50%); padding: 4px 16px; background: linear-gradient(135deg, #c8a96e, #b8944a); border-radius: 20px; font-size: 10px; font-weight: 700; color: #0a0807; text-transform: uppercase; letter-spacing: 1px; white-space: nowrap; }
+  .card-name { font-family: 'Syne', sans-serif; font-size: 17px; font-weight: 700; margin-bottom: 6px; }
+  .card-desc { font-size: 13px; color: var(--muted); line-height: 1.5; margin-bottom: 20px; }
+  .card-price { margin-bottom: 20px; display: flex; align-items: baseline; gap: 4px; }
+  .price-amount { font-family: 'Syne', sans-serif; font-size: 36px; font-weight: 800; letter-spacing: -1.5px; }
+  .price-period { font-size: 14px; color: var(--muted); }
+  .credits-amount { display: flex; align-items: center; gap: 8px; padding: 12px 14px; background: rgba(255,255,255,0.04); border: 1px solid var(--border); border-radius: 8px; margin-bottom: 16px; }
+  .credit-icon { width: 28px; height: 28px; border-radius: 7px; background: rgba(200,169,110,0.12); display: flex; align-items: center; justify-content: center; color: var(--accent); flex-shrink: 0; }
+  .credit-count { font-family: 'Syne', sans-serif; font-size: 20px; font-weight: 700; }
+  .per-credit { font-size: 11px; color: var(--dim); margin-left: auto; }
+  .card-features { list-style: none; margin-bottom: 24px; flex: 1; }
+  .card-features li { display: flex; align-items: center; gap: 8px; font-size: 13px; color: var(--muted); padding: 5px 0; }
+  .card-features li svg { width: 14px; height: 14px; color: var(--green); flex-shrink: 0; }
+  .btn-buy { width: 100%; padding: 13px; border-radius: 9px; border: none; font-size: 14px; font-weight: 700; font-family: 'Syne', sans-serif; cursor: pointer; transition: all 0.2s; display: flex; align-items: center; justify-content: center; gap: 6px; }
+  .btn-buy-default { background: rgba(255,255,255,0.06); border: 1px solid var(--border); color: var(--text); }
+  .btn-buy-default:hover { background: rgba(255,255,255,0.1); }
+  .btn-buy-popular { background: linear-gradient(135deg, #c8a96e, #b8944a); color: #0a0807; }
+  .btn-buy-popular:hover { transform: translateY(-1px); box-shadow: 0 6px 24px rgba(200,169,110,0.35); }
+  .btn-buy:disabled { opacity: 0.5; cursor: not-allowed; transform: none !important; }
+  .section-title { font-family: 'Syne', sans-serif; font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 2px; color: var(--dim); margin-bottom: 20px; display: block; }
+  .cost-table { background: var(--bg2); border: 1px solid var(--border); border-radius: 12px; overflow: hidden; width: 100%; margin-bottom: 48px; }
+  .cost-row-item { display: grid; grid-template-columns: 1fr auto auto; align-items: center; gap: 16px; padding: 14px 20px; border-bottom: 1px solid var(--border); transition: background 0.15s; }
+  .cost-row-item:last-child { border-bottom: none; }
+  .cost-row-item:hover { background: rgba(255,255,255,0.02); }
+  .cost-tool-info { display: flex; align-items: center; gap: 12px; }
+  .cost-tool-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
+  .dot-video { background: var(--purple); } .dot-image { background: var(--accent); } .dot-audio { background: var(--green); }
+  .cost-tool-name { font-size: 14px; font-weight: 500; }
+  .cost-tool-type { font-size: 11px; color: var(--dim); text-transform: uppercase; letter-spacing: 0.5px; }
+  .cost-credits { font-family: 'Syne', sans-serif; font-size: 14px; font-weight: 700; color: var(--accent); white-space: nowrap; }
+  .cost-usd { font-size: 12px; color: var(--dim); white-space: nowrap; }
+  .history-list { background: var(--bg2); border: 1px solid var(--border); border-radius: 12px; overflow: hidden; }
+  .history-empty { text-align: center; padding: 40px; color: var(--dim); font-size: 14px; }
+  .history-item { display: flex; align-items: center; justify-content: space-between; padding: 14px 20px; border-bottom: 1px solid var(--border); }
+  .history-item:last-child { border-bottom: none; }
+  .history-left { display: flex; align-items: center; gap: 12px; }
+  .history-icon { width: 34px; height: 34px; border-radius: 8px; display: flex; align-items: center; justify-content: center; }
+  .history-icon.debit { background: rgba(200,169,110,0.1); color: var(--accent); } .history-icon.credit { background: rgba(62,207,142,0.1); color: var(--green); }
+  .history-icon svg { width: 15px; height: 15px; }
+  .history-tool { font-size: 14px; font-weight: 500; }
+  .history-time { font-size: 12px; color: var(--dim); margin-top: 1px; }
+  .history-amount { font-family: 'Syne', sans-serif; font-size: 14px; font-weight: 700; }
+  .history-amount.debit { color: var(--accent); } .history-amount.credit { color: var(--green); }
+  @keyframes spin { to { transform: rotate(360deg); } }
+</style>
+</head>
+<body>
+
+<nav>
+  <a href="index.html" class="nav-logo">
+    <div class="logo-mark">N</div>
+    Godbody AI
+  </a>
+  <div class="nav-balance">
+    <div>
+      <div class="balance-num" id="navCredits">—</div>
+      <div class="balance-label">credits</div>
+    </div>
+  </div>
+</nav>
+
+<main>
+  <div class="page-hero">
+    <div class="hero-eyebrow">Credits</div>
+    <h1>Power your<br><span class="gradient-text">creative output.</span></h1>
+    <p>Credits never expire. Buy once, use whenever. Every tool costs a fixed amount — no hidden fees.</p>
+  </div>
+
+  <div class="success-banner" id="successBanner">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+    <div>
+      <h4 id="successTitle">Credits added successfully.</h4>
+      <p id="successMsg">Your balance has been updated.</p>
+    </div>
+  </div>
+
+  <div class="balance-card">
+    <div class="balance-card-left">
+      <div class="balance-icon">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
+      </div>
+      <div>
+        <h3>Current Balance</h3>
+        <div class="balance-big" id="balanceDisplay">—</div>
+        <div class="balance-sub" id="planDisplay">Loading...</div>
+      </div>
+    </div>
+    <a href="index.html" style="padding:10px 20px;background:rgba(255,255,255,0.06);border:1px solid var(--border);border-radius:8px;color:var(--text);text-decoration:none;font-size:13px;font-weight:500;transition:all 0.2s">← Back to tools</a>
+  </div>
+
+  <p class="pricing-label">Choose a Package</p>
+  <div class="pricing-grid" id="pricingGrid">
+    <div style="grid-column:1/-1;text-align:center;padding:40px;color:var(--dim)">Loading packages...</div>
+  </div>
+
+  <span class="section-title">Credit Costs Per Tool</span>
+  <div class="cost-table" id="costTable"></div>
+
+  <span class="section-title" style="margin-top:48px;display:block">Transaction History</span>
+  <div class="history-list" id="historyList">
+    <div class="history-empty">No transactions yet.</div>
+  </div>
+</main>
+
+<script>
+const BACKEND = 'http://localhost:3001';
+const USER_ID = 'demo-user';
+
+const TOOL_META = {
+  talking_photo:    { label: 'Talking Photo',     type: 'video', dot: 'dot-video' },
+  avatar_video:     { label: 'Avatar Video',       type: 'video', dot: 'dot-video' },
+  lipsync:          { label: 'Lipsync',            type: 'video', dot: 'dot-video' },
+  video_translate:  { label: 'Video Translate',    type: 'video', dot: 'dot-video' },
+  face_swap:        { label: 'Face Swap',          type: 'image', dot: 'dot-image' },
+  ai_headshots:     { label: 'AI Headshots',       type: 'image', dot: 'dot-image' },
+  text_to_image:    { label: 'Text to Image',      type: 'image', dot: 'dot-image' },
+  background_remove:{ label: 'Background Remove',  type: 'image', dot: 'dot-image' },
+  voice_clone:      { label: 'Voice Clone',        type: 'audio', dot: 'dot-audio' },
+  text_to_speech:   { label: 'Text to Speech',     type: 'audio', dot: 'dot-audio' },
+  ai_animation:     { label: 'AI Animation',       type: 'video', dot: 'dot-video' },
+  image_upscaler:   { label: 'Image Upscaler',     type: 'image', dot: 'dot-image' },
+  style_transfer:   { label: 'Style Transfer',     type: 'image', dot: 'dot-image' },
+  video_to_video:   { label: 'Video to Video',     type: 'video', dot: 'dot-video' },
+};
+
+const CREDIT_COSTS = { talking_photo:6, avatar_video:10, lipsync:8, video_translate:12, face_swap:4, ai_headshots:8, text_to_image:2, background_remove:1, voice_clone:5, text_to_speech:3, ai_animation:10, image_upscaler:3, style_transfer:4, video_to_video:12 };
+
+// Check for Stripe success redirect
+const urlParams = new URLSearchParams(window.location.search);
+const sessionId = urlParams.get('session_id');
+if (sessionId) {
+  fetch(`${BACKEND}/api/stripe/success?session_id=${sessionId}`, { headers: { 'x-user-id': USER_ID } })
+    .then(r => r.json()).then(data => {
+      if (data.success) {
+        document.getElementById('successBanner').classList.add('visible');
+        document.getElementById('successTitle').textContent = `${data.credits.toLocaleString()} credits added.`;
+        document.getElementById('successMsg').textContent = `Payment of $${data.amountPaid?.toFixed(2)} confirmed.`;
+        history.replaceState({}, '', '/client/credits.html');
+        loadBalance();
+      }
+    }).catch(() => {});
+}
+
+async function loadBalance() {
+  try {
+    const res = await fetch(`${BACKEND}/api/jobs/credits/balance`, { headers: { 'x-user-id': USER_ID } });
+    const data = await res.json();
+    const credits = data.credits || 0;
+    const plan = data.plan || 'free';
+    document.getElementById('navCredits').textContent = credits.toLocaleString();
+    document.getElementById('balanceDisplay').textContent = credits.toLocaleString();
+    document.getElementById('planDisplay').textContent = plan.charAt(0).toUpperCase() + plan.slice(1) + ' Plan';
+  } catch {}
+}
+
+async function loadPackages() {
+  try {
+    const res = await fetch(`${BACKEND}/api/stripe/packages`);
+    const data = await res.json();
+    renderPackages(data.packages);
+  } catch { renderPackages(FALLBACK_PACKAGES); }
+}
+
+const FALLBACK_PACKAGES = [
+  { id:'starter',   name:'Starter Pack',     credits:500,   priceUsd:9.99,  description:'Perfect for trying out Godbody AI tools.',       popular:false, perCredit:'$0.020', isSubscription:false },
+  { id:'creator',   name:'Creator Pack',     credits:1500,  priceUsd:24.99, description:'For consistent content creators.',             popular:true,  perCredit:'$0.017', isSubscription:false },
+  { id:'pro',       name:'Pro Pack',         credits:5000,  priceUsd:69.99, description:'Maximum output. Serious creators only.',       popular:false, perCredit:'$0.014', isSubscription:false },
+  { id:'unlimited', name:'Unlimited Monthly',credits:10000, priceUsd:99.99, description:'Monthly subscription. Resets every 30 days.', popular:false, perCredit:'$0.010', isSubscription:true },
+];
+
+function renderPackages(packages) {
+  document.getElementById('pricingGrid').innerHTML = packages.map(pkg => `
+    <div class="price-card ${pkg.popular ? 'popular' : ''}" data-pkg="${pkg.id}">
+      ${pkg.popular ? '<div class="popular-badge">Most Popular</div>' : ''}
+      <div class="card-name">${pkg.name}</div>
+      <div class="card-desc">${pkg.description}</div>
+      <div class="card-price">
+        <span class="price-amount">$${pkg.priceUsd}</span>
+        <span class="price-period">${pkg.isSubscription ? '/mo' : ' one-time'}</span>
+      </div>
+      <div class="credits-amount">
+        <div class="credit-icon"><svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor"><circle cx="12" cy="12" r="10"/></svg></div>
+        <span class="credit-count">${pkg.credits.toLocaleString()}</span>
+        <span>credits</span>
+        <span class="per-credit">${pkg.perCredit} each</span>
+      </div>
+      <ul class="card-features">
+        <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>${pkg.credits.toLocaleString()} credits${pkg.isSubscription ? '/month' : ' — never expire'}</li>
+        <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>All Godbody AI tools included</li>
+        <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>Commercial license</li>
+      </ul>
+      <button class="btn-buy ${pkg.popular ? 'btn-buy-popular' : 'btn-buy-default'}" onclick="checkout('${pkg.id}', this)">
+        ${pkg.isSubscription ? 'Subscribe' : 'Buy Credits'}
+      </button>
+    </div>
+  `).join('');
+}
+
+async function checkout(packageId, btn) {
+  if (btn) { btn.disabled = true; btn.textContent = 'Loading...'; }
+  try {
+    const res = await fetch(`${BACKEND}/api/stripe/checkout`, {
+      method: 'POST', headers: { 'Content-Type': 'application/json', 'x-user-id': USER_ID },
+      body: JSON.stringify({ packageId }),
+    });
+    const data = await res.json();
+    if (data.checkoutUrl) { window.location.href = data.checkoutUrl; }
+    else throw new Error(data.error || 'Checkout failed');
+  } catch (err) {
+    alert(err.message);
+    if (btn) { btn.disabled = false; btn.textContent = 'Buy Credits'; }
+  }
+}
+
+function renderCostTable() {
+  document.getElementById('costTable').innerHTML = Object.entries(CREDIT_COSTS).map(([key, cost]) => {
+    const meta = TOOL_META[key] || { label: key, type: 'video', dot: 'dot-video' };
+    return `
+      <div class="cost-row-item">
+        <div class="cost-tool-info">
+          <div class="cost-tool-dot ${meta.dot}"></div>
+          <div>
+            <div class="cost-tool-name">${meta.label}</div>
+            <div class="cost-tool-type">${meta.type}</div>
+          </div>
+        </div>
+        <div class="cost-credits">${cost} credits</div>
+        <div class="cost-usd">~$${(cost * 0.017).toFixed(3)}</div>
+      </div>`;
+  }).join('');
+}
+
+async function loadHistory() {
+  try {
+    const res = await fetch(`${BACKEND}/api/jobs/credits/history`, { headers: { 'x-user-id': USER_ID } });
+    const data = await res.json();
+    if (!data.history?.length) return;
+    document.getElementById('historyList').innerHTML = data.history.map(tx => {
+      const isCredit = !!(tx.added || tx.refund);
+      const amount = tx.cost || tx.added || tx.refund || 0;
+      const tool = TOOL_META[tx.tool]?.label || tx.tool || 'Credit Purchase';
+      const time = new Date(tx.timestamp).toLocaleDateString('en-US', { month:'short', day:'numeric', hour:'2-digit', minute:'2-digit' });
+      return `
+        <div class="history-item">
+          <div class="history-left">
+            <div class="history-icon ${isCredit ? 'credit' : 'debit'}">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">${isCredit ? '<polyline points="20 6 9 17 4 12"/>' : '<polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/>'}</svg>
+            </div>
+            <div>
+              <div class="history-tool">${tool}</div>
+              <div class="history-time">${time}</div>
+            </div>
+          </div>
+          <div class="history-amount ${isCredit ? 'credit' : 'debit'}">${isCredit ? '+' : '-'}${amount} cr</div>
+        </div>`;
+    }).join('');
+  } catch {}
+}
+
+loadBalance();
+loadPackages();
+renderCostTable();
+loadHistory();
+</script>
+</body>
+</html>
