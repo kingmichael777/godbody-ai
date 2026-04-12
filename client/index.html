@@ -4,8 +4,11 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description"
+    content="Godbody AI helps you create videos, images, and audio with powerful AI tools in seconds.">
   <title>Godbody AI — Create</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link
     href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;1,9..40,300&display=swap"
     rel="stylesheet">
@@ -549,6 +552,8 @@
       position: relative;
       backdrop-filter: blur(10px);
       animation: cardIn 0.4s ease-out both;
+      content-visibility: auto;
+      contain-intrinsic-size: 260px 260px;
     }
 
     @keyframes cardIn {
@@ -937,6 +942,17 @@
         text-align: center;
       }
     }
+
+    @media (prefers-reduced-motion: reduce) {
+
+      *,
+      *::before,
+      *::after {
+        animation: none !important;
+        transition: none !important;
+        scroll-behavior: auto !important;
+      }
+    }
   </style>
 </head>
 
@@ -1051,7 +1067,8 @@
       <div class="tool-card" data-category="video image" data-tool="face_swap" data-replicate
         style="animation-delay:0.04s" onclick="openModal('face_swap')">
         <div class="card-thumb">
-          <img class="card-thumb-img" src="img/tool-face-swap.png" alt="Face Swap">
+          <img class="card-thumb-img" src="img/tool-face-swap.png" alt="Face Swap" loading="lazy" decoding="async"
+            fetchpriority="low">
           <div class="card-thumb-overlay"></div>
         </div>
         <div class="card-body">
@@ -1078,7 +1095,8 @@
       <div class="tool-card" data-category="image new" data-tool="ai_headshots" data-replicate
         style="animation-delay:0.08s" onclick="openModal('ai_headshots')">
         <div class="card-thumb">
-          <img class="card-thumb-img" src="img/tool-ai-headshots.png" alt="AI Headshots">
+          <img class="card-thumb-img" src="img/tool-ai-headshots.png" alt="AI Headshots" loading="lazy"
+            decoding="async" fetchpriority="low">
           <div class="card-thumb-overlay"></div>
         </div>
         <div class="card-body">
@@ -1102,7 +1120,8 @@
       <div class="tool-card" data-category="image" data-tool="text_to_image" data-replicate
         style="animation-delay:0.12s" onclick="openModal('text_to_image')">
         <div class="card-thumb">
-          <img class="card-thumb-img" src="img/tool-text-to-image.png" alt="Text to Image">
+          <img class="card-thumb-img" src="img/tool-text-to-image.png" alt="Text to Image" loading="lazy"
+            decoding="async" fetchpriority="low">
           <div class="card-thumb-overlay"></div>
         </div>
         <div class="card-body">
@@ -1126,7 +1145,8 @@
       <div class="tool-card" data-category="video" data-tool="video_to_video" data-replicate
         style="animation-delay:0.16s" onclick="openModal('video_to_video')">
         <div class="card-thumb">
-          <img class="card-thumb-img" src="img/tool-video-to-video.png" alt="Video to Video">
+          <img class="card-thumb-img" src="img/tool-video-to-video.png" alt="Video to Video" loading="lazy"
+            decoding="async" fetchpriority="low">
           <div class="card-thumb-overlay"></div>
         </div>
         <div class="card-body">
@@ -1150,7 +1170,8 @@
       <div class="tool-card" data-category="audio new" data-tool="voice_clone" style="animation-delay:0.20s"
         onclick="openModal('voice_clone')">
         <div class="card-thumb">
-          <img class="card-thumb-img" src="img/tool-voice-clone.png" alt="Voice Clone">
+          <img class="card-thumb-img" src="img/tool-voice-clone.png" alt="Voice Clone" loading="lazy" decoding="async"
+            fetchpriority="low">
           <div class="card-thumb-overlay"></div>
         </div>
         <div class="card-body">
@@ -1174,7 +1195,8 @@
       <div class="tool-card" data-category="image" data-tool="background_remove" data-replicate
         style="animation-delay:0.24s" onclick="openModal('background_remove')">
         <div class="card-thumb">
-          <img class="card-thumb-img" src="img/tool-background-remove.png" alt="Background Remove">
+          <img class="card-thumb-img" src="img/tool-background-remove.png" alt="Background Remove" loading="lazy"
+            decoding="async" fetchpriority="low">
           <div class="card-thumb-overlay"></div>
         </div>
         <div class="card-body">
@@ -1198,7 +1220,8 @@
       <div class="tool-card" data-category="video new" data-tool="ai_animation" data-replicate
         style="animation-delay:0.28s" onclick="openModal('ai_animation')">
         <div class="card-thumb">
-          <img class="card-thumb-img" src="img/tool-ai-animation.png" alt="AI Animation">
+          <img class="card-thumb-img" src="img/tool-ai-animation.png" alt="AI Animation" loading="lazy"
+            decoding="async" fetchpriority="low">
           <div class="card-thumb-overlay"></div>
         </div>
         <div class="card-body">
@@ -1222,7 +1245,8 @@
       <div class="tool-card" data-category="image" data-tool="image_upscaler" data-replicate
         style="animation-delay:0.32s" onclick="openModal('image_upscaler')">
         <div class="card-thumb">
-          <img class="card-thumb-img" src="img/tool-image-upscaler.png" alt="Image Upscaler">
+          <img class="card-thumb-img" src="img/tool-image-upscaler.png" alt="Image Upscaler" loading="lazy"
+            decoding="async" fetchpriority="low">
           <div class="card-thumb-overlay"></div>
         </div>
         <div class="card-body">
@@ -1246,7 +1270,8 @@
       <div class="tool-card" data-category="video audio" data-tool="lipsync" style="animation-delay:0.36s"
         onclick="openModal('lipsync')">
         <div class="card-thumb">
-          <img class="card-thumb-img" src="img/tool-lipsync.png" alt="Lipsync Video">
+          <img class="card-thumb-img" src="img/tool-lipsync.png" alt="Lipsync Video" loading="lazy" decoding="async"
+            fetchpriority="low">
           <div class="card-thumb-overlay"></div>
         </div>
         <div class="card-body">
@@ -1270,7 +1295,8 @@
       <div class="tool-card" data-category="audio" data-tool="text_to_speech" style="animation-delay:0.40s"
         onclick="openModal('text_to_speech')">
         <div class="card-thumb">
-          <img class="card-thumb-img" src="img/tool-text-to-speech.png" alt="Text to Speech">
+          <img class="card-thumb-img" src="img/tool-text-to-speech.png" alt="Text to Speech" loading="lazy"
+            decoding="async" fetchpriority="low">
           <div class="card-thumb-overlay"></div>
         </div>
         <div class="card-body">
@@ -1294,7 +1320,8 @@
       <div class="tool-card" data-category="video image" data-tool="talking_photo" style="animation-delay:0.44s"
         onclick="openModal('talking_photo')">
         <div class="card-thumb">
-          <img class="card-thumb-img" src="img/tool-talking-photo.png" alt="Talking Photo">
+          <img class="card-thumb-img" src="img/tool-talking-photo.png" alt="Talking Photo" loading="lazy"
+            decoding="async" fetchpriority="low">
           <div class="card-thumb-overlay"></div>
         </div>
         <div class="card-body">
@@ -1318,7 +1345,8 @@
       <div class="tool-card" data-category="image new" data-tool="style_transfer" data-replicate
         style="animation-delay:0.48s" onclick="openModal('style_transfer')">
         <div class="card-thumb">
-          <img class="card-thumb-img" src="img/tool-style-transfer.png" alt="Style Transfer">
+          <img class="card-thumb-img" src="img/tool-style-transfer.png" alt="Style Transfer" loading="lazy"
+            decoding="async" fetchpriority="low">
           <div class="card-thumb-overlay"></div>
         </div>
         <div class="card-body">
@@ -1763,7 +1791,7 @@
     }
   </style>
 
-  <script src="GODBODY-api.js"></script>
+  <script src="godbody-api.js"></script>
   <script>
     // ═══════════════════════════════════
     // TOOL REGISTRY
