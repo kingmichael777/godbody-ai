@@ -1,6 +1,14 @@
-# NOOR AI — Backend
+# Godbody AI — Chat-to-App Builder
 
-HeyGen-powered AI video generation hub with a built-in credit system.
+Godbody AI is an AI engineer that builds and edits web apps directly from chat. It turns your ideas into working code, designs polished UIs, wires up backends, fixes bugs, and ships features while you watch the live preview update.
+
+## HOW IT WORKS
+
+- **Discuss or build:** For clear requests, it jumps straight to code. For vague requests, it asks a couple of focused questions first.
+- **Edit your codebase:** Create and modify files, install packages, refactor code, and follow your design system.
+- **Backend via Godbody Cloud:** Add database, auth, file storage, server functions, and AI capabilities without external setup.
+- **Debug with real signals:** Use console logs, network requests, and live preview feedback to verify fixes.
+- **Generate assets:** Produce images, PDFs, reports, or one-off scripts whenever you need them.
 
 ---
 
